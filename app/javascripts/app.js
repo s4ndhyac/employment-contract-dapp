@@ -50,13 +50,29 @@ window.App = {
 
   refreshBalance: function() {
     var self = this;
-
     var emp;
     EmploymentContract.deployed().then(function(instance) {
       emp = instance;
       return emp.getBalance.call(account, {from: account});
     }).then(function(value) {
       var balance_element = document.getElementById("balance");
+      balance_element.innerHTML = value.valueOf();
+    }).catch(function(e) {
+      console.log(e);
+      self.setStatus("Error getting balance; see log.");
+    });
+  },
+
+  checkBalance: function() {
+    var employeeAddress = document.getElementById("empBalanceAdd").value;
+    console.log(employeeAddress);
+    document.getElementById("empBalanceAdd").value='';
+    var emp;
+    EmploymentContract.deployed().then(function(instance) {
+      emp = instance;
+      return emp.checkBalance.call(employeeAddress,{from: account});
+    }).then(function(value) {
+      var balance_element = document.getElementById("empBalance");
       balance_element.innerHTML = value.valueOf();
     }).catch(function(e) {
       console.log(e);

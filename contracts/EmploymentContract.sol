@@ -36,4 +36,8 @@ contract EmploymentContract {
   	    return balances[addr];
 	}
 
+    function checkBalance(address addr) returns(uint balance) {
+        return balances[addr];
+    }
+
 }
