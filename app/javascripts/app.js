@@ -82,16 +82,14 @@ window.App = {
 
   sendCoin: function() {
     var self = this;
-
     var amount = parseInt(document.getElementById("amount").value);
     var receiver = document.getElementById("receiver").value;
-
     this.setStatus("Creating contract");
-
+    document.getElementById("amount").value='';
+    document.getElementById("receiver").value='';
     var emp;
     EmploymentContract.deployed().then(function(instance) {
       emp = instance;
-      
       return emp.sendCoin(receiver, amount, {from: account});
     }).then(function() {
       self.setStatus("Transaction complete!");
