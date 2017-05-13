@@ -105,6 +105,7 @@ window.App = {
     getContract: function() {
     var employeeAddress = document.getElementById("empAddress").value;
     console.log(employeeAddress);
+    document.getElementById("empAddress").value='';
     var emp;
     EmploymentContract.deployed().then(function(instance) {
       emp = instance;
@@ -124,7 +125,7 @@ window.App = {
     var emp;
     EmploymentContract.deployed().then(function(instance) {
       emp = instance;
-      return emp.removeContract(employeeAddress,{from: account});
+      return emp.removeContract(employeeAddress,{from: account, gas: 4712388, gasPrice: 100000000000});
     }).then(function() {
         })
         .catch(function(error) {
