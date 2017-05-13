@@ -1,34 +1,39 @@
 pragma solidity ^0.4.2;
 
 contract EmploymentContract {
+
+    mapping (address=>uint) employmentContracts;
+
+    mapping (address=>uint) balances;
+
     address public employer;
-    mapping (address => uint) private balances;
-    address public employee;
-    uint public salary;
-    uint public daysPaid;
 
-    //log tansfer event
-    event LogTransfer(address accountAddress, uint amount);
-
-    //Constructor
-    function(){
+    function EmploymentContract() {
         employer = msg.sender;
-        employee = 0x93a53907765b3296c57c38a69a1dd0bada6321bb
-        salary = 0
+        balances[msg.sender] = 10000;
     }
 
-    function transfer public returns (uint) {
-        balances[msg.sender] -= msg.value
-        LogTransfer(msg.sender,msg.value)
-        return balances[msg.sender]
+    function addContract(address employee, uint amount) {
+        employmentContracts[employee] = amount;
     }
 
-    function payDailySalary(uint days) public {
-        employee.send(salary/30*days);
-        daysPaid++;
+    function removeContract(address employee) {
+        delete employmentContracts[employee];
     }
 
-    function setSalary(uint salary_decided) public {
-        salary = salary_decided
+    function getContract(address employee) constant returns (uint salary) {   
+        return (employmentContracts[employee]);
     }
+
+    function sendCoin(address receiver, uint amount) returns(bool sufficient) {
+		if (balances[msg.sender] < amount) return false;
+		balances[msg.sender] -= amount;
+		balances[receiver] += amount;
+		return true;
+	}
+
+    function getBalance(address addr) returns(uint) {
+  	    return balances[addr];
+	}
+
 }

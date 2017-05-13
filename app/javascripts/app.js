@@ -6,7 +6,7 @@ import { default as Web3} from 'web3';
 import { default as contract } from 'truffle-contract'
 
 // Import our contract artifacts and turn them into usable abstractions.
-import employment_contract from '../../build/contracts/Employment.json'
+import employment_contract from '../../build/contracts/EmploymentContract.json'
 
 // MetaCoin is our usable abstraction, which we'll use through the code below.
 var EmploymentContract = contract(employment_contract);
@@ -37,7 +37,7 @@ window.App = {
       }
 
       accounts = accs;
-      account = accounts[8];
+      account = accounts[0];
 
       self.refreshBalance();
     });
@@ -74,9 +74,9 @@ window.App = {
 
     var emp;
     EmploymentContract.deployed().then(function(instance) {
-      meta = instance;
+      emp = instance;
       
-      return meta.sendCoin(receiver, amount, {from: account});
+      return emp.sendCoin(receiver, amount, {from: account});
     }).then(function() {
       self.setStatus("Transaction complete!");
       self.refreshBalance();
@@ -84,7 +84,54 @@ window.App = {
       console.log(e);
       self.setStatus("Error sending coin; see log.");
     });
-  }
+  },
+
+    addContract: function() {
+    var employeeAddress = document.getElementById("employeeAddress").value;
+    console.log(employeeAddress);
+    var employeeSalary = document.getElementById("employeeSalary").value;
+    console.log(employeeSalary);
+    var emp;
+    EmploymentContract.deployed().then(function(instance) {
+      emp = instance;
+      return emp.addContract(employeeAddress,employeeSalary,{from: account});
+    }).then(function() {
+        })
+        .catch(function(error) {
+            console.error(error);
+        });
+    },
+
+    getContract: function() {
+    var employeeAddress = document.getElementById("empAddress").value;
+    console.log(employeeAddress);
+    var emp;
+    EmploymentContract.deployed().then(function(instance) {
+      emp = instance;
+      return emp.getContract(employeeAddress);
+    }).then(function(salary) {
+      var empsalary_element = document.getElementById("getSalary");
+      empsalary_element.innerHTML = salary.valueOf();
+        })
+        .catch(function(error) {
+            console.error(error);
+        });
+    },
+
+    removeContract: function() {
+    var employeeAddress = document.getElementById("removeAddress").value;
+    console.log(employeeAddress);
+    var emp;
+    EmploymentContract.deployed().then(function(instance) {
+      emp = instance;
+      return emp.removeContract(employeeAddress,{from: account});
+    }).then(function() {
+        })
+        .catch(function(error) {
+            console.error(error);
+        });
+    }
+
 };
 
 window.addEventListener('load', function() {
