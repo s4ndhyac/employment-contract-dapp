@@ -17,6 +17,10 @@ var EmploymentContract = contract(employment_contract);
 var accounts;
 var account;
 
+const abiDecoder = require('abi-decoder');
+const abiData = [{"constant":true,"inputs":[{"name":"employee","type":"address"}],"name":"getContract","outputs":[{"name":"salary","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"addr","type":"address"}],"name":"checkBalance","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"receiver","type":"address"},{"name":"amount","type":"uint256"}],"name":"sendCoin","outputs":[{"name":"sufficient","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"employer","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"employee","type":"address"},{"name":"amount","type":"uint256"}],"name":"addContract","outputs":[],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"employee","type":"address"}],"name":"removeContract","outputs":[],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"addr","type":"address"}],"name":"getBalance","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"inputs":[],"payable":false,"type":"constructor"}]
+abiDecoder.addABI(abiData);
+
 window.App = {
   start: function() {
     var self = this;
@@ -161,6 +165,7 @@ window.App = {
           var startBlockNumber = 0;
           console.log("Using startBlockNumber: " + startBlockNumber);
           console.log("Searching for transactions to/from account \"" + myaccount + "\" within blocks "  + startBlockNumber + " and " + endBlockNumber);
+          var empHistoryDict = {};
           for (var i = startBlockNumber; i <= endBlockNumber; i++) {
             if (i % 1000 == 0) {
             console.log("Searching block " + i);
@@ -173,24 +178,24 @@ window.App = {
               var block = result;
               if (block != null && block.transactions != null) {
                block.transactions.forEach( function(e) {
-                 console.log(e);
-                   if (myaccount == "*" || myaccount == e.from || myaccount == e.to) {
-                   console.log("  tx hash          : " + e.hash + "\n"
-                        + "   nonce           : " + e.nonce + "\n"
-                        + "   blockHash       : " + e.blockHash + "\n"
-                        + "   blockNumber     : " + e.blockNumber + "\n"
-                        + "   transactionIndex: " + e.transactionIndex + "\n"
-                        + "   from            : " + e.from + "\n" 
-                        + "   to              : " + e.to + "\n"
-                        + "   value           : " + e.value + "\n"
-                        + "   time            : " + block.timestamp + " " + new Date(block.timestamp * 1000).toGMTString() + "\n"
-                        + "   gasPrice        : " + e.gasPrice + "\n"
-                        + "   gas             : " + e.gas + "\n"
-                        + "   input           : " + e.input);
-                   }
+                 if(e != null) {
+                      var inputData = abiDecoder.decodeMethod(e.input);
+                      var inputDataJson = JSON.stringify(inputData);
+                      console.log(inputDataJson);
+                      if(inputData != null) {
+                        if(inputData.name=="sendCoin" && inputData.params[0].value==myaccount) {
+                        console.log(block.timestamp);
+                        console.log(inputData.params[1].value);
+                        empHistoryDict[block.timestamp] = inputData.params[1].value;
+                        console.log(JSON.stringify(empHistoryDict));
+                        }
+                      }
+                 }
               })
+                 var history_element = document.getElementById("empHistory");
+                 history_element.innerHTML = JSON.stringify(empHistoryDict);
             }
-         });
+           });
         }
       });
     }
