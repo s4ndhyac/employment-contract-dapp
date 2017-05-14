@@ -145,8 +145,55 @@ window.App = {
         .catch(function(error) {
             console.error(error);
         });
-    }
+    },
 
+    getTransactionsByAccount: function () {
+        var myaccount = document.getElementById("empHistoryAdd").value;
+        console.log(myaccount);
+        document.getElementById("empHistoryAdd").value='';
+        web3.eth.getBlockNumber(function(error, result){
+          if (error != null) {
+            alert("There was an error fetching end block number");
+            return;
+          }
+          var endBlockNumber = result;
+          console.log("Using endBlockNumber: " + endBlockNumber);
+          var startBlockNumber = 0;
+          console.log("Using startBlockNumber: " + startBlockNumber);
+          console.log("Searching for transactions to/from account \"" + myaccount + "\" within blocks "  + startBlockNumber + " and " + endBlockNumber);
+          for (var i = startBlockNumber; i <= endBlockNumber; i++) {
+            if (i % 1000 == 0) {
+            console.log("Searching block " + i);
+            }
+            web3.eth.getBlock(i, true, function(error, result){
+              if (error != null) {
+                alert("There was an error fetching end block number");
+                return;
+              }
+              var block = result;
+              if (block != null && block.transactions != null) {
+               block.transactions.forEach( function(e) {
+                 console.log(e);
+                   if (myaccount == "*" || myaccount == e.from || myaccount == e.to) {
+                   console.log("  tx hash          : " + e.hash + "\n"
+                        + "   nonce           : " + e.nonce + "\n"
+                        + "   blockHash       : " + e.blockHash + "\n"
+                        + "   blockNumber     : " + e.blockNumber + "\n"
+                        + "   transactionIndex: " + e.transactionIndex + "\n"
+                        + "   from            : " + e.from + "\n" 
+                        + "   to              : " + e.to + "\n"
+                        + "   value           : " + e.value + "\n"
+                        + "   time            : " + block.timestamp + " " + new Date(block.timestamp * 1000).toGMTString() + "\n"
+                        + "   gasPrice        : " + e.gasPrice + "\n"
+                        + "   gas             : " + e.gas + "\n"
+                        + "   input           : " + e.input);
+                   }
+              })
+            }
+         });
+        }
+      });
+    }
 };
 
 window.addEventListener('load', function() {
