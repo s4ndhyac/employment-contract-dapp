@@ -77,7 +77,7 @@ window.App = {
       emp = instance;
       return emp.returnEmployeeCount.call(account, {from: account});
     }).then(function(value) {
-      var emp_count = document.getElementById("getEmpCount");
+      var emp_count = document.getElementById("empCount");
       emp_count.innerHTML = value.valueOf();
     }).catch(function(e) {
       console.log(e);
@@ -150,7 +150,8 @@ window.App = {
       emp = instance;
       return emp.getEmployee(employeeCount-1);
     }).then(function(value) {
-      console.log(value);
+      var emp_details = document.getElementById("getEmpDetails");
+      emp_details.innerHTML = value.valueOf();
         })
         .catch(function(error) {
             console.error(error);
