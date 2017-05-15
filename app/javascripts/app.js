@@ -7,9 +7,11 @@ import { default as contract } from 'truffle-contract'
 
 // Import our contract artifacts and turn them into usable abstractions.
 import employment_contract from '../../build/contracts/EmploymentContract.json'
+import employee_contract from '../../build/contracts/EmployeeContract.json'
 
 // MetaCoin is our usable abstraction, which we'll use through the code below.
 var EmploymentContract = contract(employment_contract);
+var EmployeeContract = contract(employee_contract);
 
 // The following code is simple to show off interacting with your contracts.
 // As your needs grow you will likely need to change its form and structure.
@@ -27,6 +29,7 @@ window.App = {
 
     // Bootstrap the MetaCoin abstraction for Use.
     EmploymentContract.setProvider(web3.currentProvider);
+    EmployeeContract.setProvider(web3.currentProvider);
 
     // Get the initial account balance so it can be displayed.
     web3.eth.getAccounts(function(err, accs) {
@@ -67,6 +70,21 @@ window.App = {
     });
   },
 
+    getEmpCount: function() {
+    var self = this;
+    var emp;
+    EmployeeContract.deployed().then(function(instance) {
+      emp = instance;
+      return emp.returnEmployeeCount.call(account, {from: account});
+    }).then(function(value) {
+      var emp_count = document.getElementById("getEmpCount");
+      emp_count.innerHTML = value.valueOf();
+    }).catch(function(e) {
+      console.log(e);
+      self.setStatus("Error getting emp count; see log.");
+    });
+  },
+
   checkBalance: function() {
     var employeeAddress = document.getElementById("empBalanceAdd").value;
     console.log(employeeAddress);
@@ -103,6 +121,41 @@ window.App = {
       self.setStatus("Error sending coin; see log.");
     });
   },
+
+  addEmployee: function() {
+    var employeeAddress = document.getElementById("addEmployeeAddress").value;
+    console.log(employeeAddress);
+    var employeeName = document.getElementById("addEmployeeName").value;
+    console.log(employeeName);
+    var employeeSkill = document.getElementById("addEmployeeSkill").value;
+    console.log(employeeSkill);
+    var emp;
+    EmployeeContract.deployed().then(function(instance) {
+      emp = instance;
+      return emp.createEmployee(employeeAddress,employeeName,employeeSkill,{from: account});
+    }).then(function(value) {
+      console.log(value.valueOf());
+        })
+        .catch(function(error) {
+            console.error(error);
+        });
+    },
+
+    getEmployees: function() {
+    var employeeCount = document.getElementById("getEmployeeCount").value;
+    console.log(employeeCount);
+    document.getElementById("getEmployeeCount").value='';
+    var emp;
+    EmployeeContract.deployed().then(function(instance) {
+      emp = instance;
+      return emp.getEmployee(employeeCount-1);
+    }).then(function(value) {
+      console.log(value);
+        })
+        .catch(function(error) {
+            console.error(error);
+        });
+    },
 
     addContract: function() {
     var employeeAddress = document.getElementById("employeeAddress").value;
