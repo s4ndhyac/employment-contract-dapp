@@ -123,16 +123,16 @@ window.App = {
   },
 
   addEmployee: function() {
-    var employeeAddress = document.getElementById("addEmployeeAddress").value;
-    console.log(employeeAddress);
-    var employeeName = document.getElementById("addEmployeeName").value;
-    console.log(employeeName);
     var employeeSkill = document.getElementById("addEmployeeSkill").value;
     console.log(employeeSkill);
+    var employeeName = document.getElementById("addEmployeeName").value;
+    console.log(employeeName);
+    var employeeRole = document.getElementById("addEmployeeRole").value;
+    console.log(employeeRole);
     var emp;
     EmployeeContract.deployed().then(function(instance) {
       emp = instance;
-      return emp.createEmployee(employeeAddress,employeeName,employeeSkill,{from: account});
+      return emp.createEmployee(employeeName,employeeSkill,employeeRole,{from: account});
     }).then(function(value) {
       console.log(value.valueOf());
         })
