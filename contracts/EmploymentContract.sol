@@ -2,7 +2,12 @@ pragma solidity ^0.4.2;
 
 contract EmploymentContract {
 
-    mapping (address=>uint) employmentContracts;
+    struct Terms {
+        uint dailySalary;
+        uint contractDays;
+    }
+
+    mapping (address => Terms) employmentContracts;
 
     mapping (address=>uint) balances;
 
@@ -13,16 +18,16 @@ contract EmploymentContract {
         balances[msg.sender] = 10000;
     }
 
-    function addContract(address employee, uint amount) {
-        employmentContracts[employee] = amount;
+    function addContract(address employee, uint amount, uint contractDays) {
+        employmentContracts[employee] = Terms(amount, contractDays);
     }
 
     function removeContract(address employee) {
         delete employmentContracts[employee];
     }
 
-    function getContract(address employee) constant returns (uint salary) {   
-        return (employmentContracts[employee]);
+    function getContract(address employee) constant returns (uint dailySalary, uint contractDays) {   
+        return (employmentContracts[employee].dailySalary, employmentContracts[employee].contractDays);
     }
 
     function sendCoin(address receiver, uint amount) returns(bool sufficient) {

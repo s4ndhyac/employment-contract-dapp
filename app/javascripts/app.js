@@ -162,10 +162,12 @@ window.App = {
     console.log(employeeAddress);
     var employeeSalary = document.getElementById("employeeSalary").value;
     console.log(employeeSalary);
+    var employeeDuration = document.getElementById("employeeDuration").value;
+    console.log(employeeDuration);
     var emp;
     EmploymentContract.deployed().then(function(instance) {
       emp = instance;
-      return emp.addContract(employeeAddress,employeeSalary,{from: account});
+      return emp.addContract(employeeAddress,employeeSalary,employeeDuration,{from: account});
     }).then(function() {
         })
         .catch(function(error) {
@@ -182,6 +184,7 @@ window.App = {
       emp = instance;
       return emp.getContract(employeeAddress);
     }).then(function(salary) {
+      console.log(salary);
       var empsalary_element = document.getElementById("getSalary");
       empsalary_element.innerHTML = salary.valueOf();
         })
