@@ -17,6 +17,9 @@ contract EmploymentContract {
 
     address public employer;
 
+    event Transaction(address sender, address receiver, uint amount, uint time);
+    event Rating(address giver, address receiver, uint rate, uint time);
+
     function EmploymentContract() {
         employer = tx.origin;
         balances[tx.origin] = 10000;
@@ -41,6 +44,7 @@ contract EmploymentContract {
 		if (balances[tx.origin] < amount) return false;
 		balances[tx.origin] -= amount;
 		balances[receiver] += amount;
+        Transaction(tx.origin,receiver,amount,now);
 		return true;
 	}
 
@@ -48,6 +52,7 @@ contract EmploymentContract {
 		if (balances[sender] < amount) return false;
 		balances[sender] -= amount;
 		balances[receiver] += amount;
+        Transaction(escrow,receiver,amount,now);
 		return true;
 	}
 
@@ -63,6 +68,7 @@ contract EmploymentContract {
         employmentContracts[employeeAddr].ratings[employmentContracts[employeeAddr].numRatings] = rating;
         genericSendCoin(escrow, employeeAddr, employmentContracts[employeeAddr].dailySalary);
         employmentContracts[employeeAddr].numRatings++;
+        Rating(tx.origin,employeeAddr,rating,now);
         return employmentContracts[employeeAddr].numRatings;
     }
 
