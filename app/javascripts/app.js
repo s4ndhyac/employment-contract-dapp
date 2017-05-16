@@ -8,10 +8,12 @@ import { default as contract } from 'truffle-contract'
 // Import our contract artifacts and turn them into usable abstractions.
 import employment_contract from '../../build/contracts/EmploymentContract.json'
 import employee_contract from '../../build/contracts/EmployeeContract.json'
+import employment_factory_contract from '../../build/contracts/EmploymentContractFactory.json'
 
 // MetaCoin is our usable abstraction, which we'll use through the code below.
 var EmploymentContract = contract(employment_contract);
 var EmployeeContract = contract(employee_contract);
+var EmploymentFactoryContract = contract(employment_factory_contract);
 
 // The following code is simple to show off interacting with your contracts.
 // As your needs grow you will likely need to change its form and structure.
@@ -30,7 +32,8 @@ window.App = {
     // Bootstrap the MetaCoin abstraction for Use.
     EmploymentContract.setProvider(web3.currentProvider);
     EmployeeContract.setProvider(web3.currentProvider);
-
+    EmploymentFactoryContract.setProvider(web3.currentProvider);
+    
     // Get the initial account balance so it can be displayed.
     web3.eth.getAccounts(function(err, accs) {
       if (err != null) {
