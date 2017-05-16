@@ -13,6 +13,11 @@
   <br><br><button id="addEmployee" onclick="App.addEmployee();window.location.reload();">Add Contract</button>
   <br>
   <br>
+  <h1>Get Employer from factory</h1>
+  <br><br><button id="getEmployer" onclick="App.getEmployer()">Get Employer</button>
+  <p>Employer details is: <span class="black"><span id="getEmployerDetails"></span></span></p>
+  <br>
+  <br>
   <h3>Employee Count: <span class="black"><span id="empCount"></span></span></h3>
   <br><br><button id="getEmpCount" onclick="App.getEmpCount()">Get Employees</button>
   <br>
@@ -52,6 +57,12 @@
   <br><label for="empBalanceAdd">Employee Address:</label><input type="text" id="empBalanceAdd" placeholder="e.g., 0x93e66d9baea28c17d9fc393b53e3fbdd76899dae"></input>
   <br><br><button id="checkBalance" onclick="App.checkBalance()">Check Balance</button>
   <p>Employee balance is: <span class="black"><span id="empBalance"></span> ETHER</span></p>
+  <br>
+  <br>
+  <h1>Add Rating</h1>
+  <br><label for="empRatingAdd">Employee Address:</label><input type="text" id="empRatingAdd" placeholder="e.g., 0x93e66d9baea28c17d9fc393b53e3fbdd76899dae"></input>
+  <br><label for="empRating">Employee Rating:</label><input type="text" id="empRating" placeholder="e.g., 1-10"></input>
+  <br><br><button id="AddRating" onclick="App.AddRating()">Add Rating</button>
   <br>
   <br>
   <h1>Get Transaction History</h1>

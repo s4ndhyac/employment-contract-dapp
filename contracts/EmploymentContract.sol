@@ -18,8 +18,8 @@ contract EmploymentContract {
     address public employer;
 
     function EmploymentContract() {
-        employer = msg.sender;
-        balances[msg.sender] = 10000;
+        employer = tx.origin;
+        balances[tx.origin] = 10000;
         escrow = 0xfb230af80ac1b1df8219581d870c10ef2a2af8be;
     }
 
@@ -38,8 +38,8 @@ contract EmploymentContract {
     }
 
     function sendCoin(address receiver, uint amount) returns(bool sufficient) {
-		if (balances[msg.sender] < amount) return false;
-		balances[msg.sender] -= amount;
+		if (balances[tx.origin] < amount) return false;
+		balances[tx.origin] -= amount;
 		balances[receiver] += amount;
 		return true;
 	}

@@ -12,8 +12,8 @@ contract EmploymentContractFactory {
         return employment;
     }
 
-    function getEmploymentContract(address employmentAddress) public returns (EmploymentContract employment) {
-        return contracts[employmentAddress];
+    function getEmploymentContract() public returns (EmploymentContract employment) {
+        return contracts[msg.sender];
     }
 
 }

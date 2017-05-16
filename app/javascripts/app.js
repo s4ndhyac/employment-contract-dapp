@@ -61,8 +61,13 @@ window.App = {
   refreshBalance: function() {
     var self = this;
     var emp;
-    EmploymentContract.deployed().then(function(instance) {
-      emp = instance;
+    var empFactory;
+    EmploymentFactoryContract.deployed().then(function(instance) {
+      empFactory = instance;
+      return empFactory.getEmploymentContract.call({from: account});
+    }).then(function(value) {
+      console.log(value);
+      emp = EmploymentContract.at(value);
       return emp.getBalance.call(account, {from: account});
     }).then(function(value) {
       var balance_element = document.getElementById("balance");
@@ -93,8 +98,13 @@ window.App = {
     console.log(employeeAddress);
     document.getElementById("empBalanceAdd").value='';
     var emp;
-    EmploymentContract.deployed().then(function(instance) {
-      emp = instance;
+    var empFactory;
+    EmploymentFactoryContract.deployed().then(function(instance) {
+      empFactory = instance;
+      return empFactory.getEmploymentContract.call({from: account});
+    }).then(function(value) {
+      console.log(value);
+      emp = EmploymentContract.at(value);
       return emp.checkBalance.call(employeeAddress,{from: account});
     }).then(function(value) {
       var balance_element = document.getElementById("empBalance");
@@ -113,8 +123,13 @@ window.App = {
     document.getElementById("amount").value='';
     document.getElementById("receiver").value='';
     var emp;
-    EmploymentContract.deployed().then(function(instance) {
-      emp = instance;
+    var empFactory;
+    EmploymentFactoryContract.deployed().then(function(instance) {
+      empFactory = instance;
+      return empFactory.getEmploymentContract.call({from: account});
+    }).then(function(value) {
+      console.log(value);
+      emp = EmploymentContract.at(value);
       return emp.sendCoin(receiver, amount, {from: account});
     }).then(function() {
       self.setStatus("Transaction complete!");
@@ -142,6 +157,17 @@ window.App = {
         .catch(function(error) {
             console.error(error);
         });
+      var empFactory;
+      if(employeeRole==0){
+        EmploymentFactoryContract.deployed().then(function(instance) {
+          empFactory = instance;
+          return empFactory.newEmployment({from: account});
+        }).then(function() {
+        })
+        .catch(function(error) {
+            console.error(error);
+        });
+      }
     },
 
     getEmployees: function() {
@@ -161,6 +187,21 @@ window.App = {
         });
     },
 
+    getEmployer: function() {
+    var emp;
+    EmploymentFactoryContract.deployed().then(function(instance) {
+      emp = instance;
+      return emp.getEmploymentContract.call({from: account});
+    }).then(function(value) {
+      console.log(value);
+      var emp_details = document.getElementById("getEmployerDetails");
+      emp_details.innerHTML = value.valueOf();
+        })
+        .catch(function(error) {
+            console.error(error);
+        });
+    },
+
     addContract: function() {
     var employeeAddress = document.getElementById("employeeAddress").value;
     console.log(employeeAddress);
@@ -169,8 +210,13 @@ window.App = {
     var employeeDuration = document.getElementById("employeeDuration").value;
     console.log(employeeDuration);
     var emp;
-    EmploymentContract.deployed().then(function(instance) {
-      emp = instance;
+    var empFactory;
+    EmploymentFactoryContract.deployed().then(function(instance) {
+      empFactory = instance;
+      return empFactory.getEmploymentContract.call({from: account});
+    }).then(function(value) {
+      console.log(value);
+      emp = EmploymentContract.at(value);
       return emp.addContract(employeeAddress,employeeSalary,employeeDuration,{from: account});
     }).then(function() {
         })
@@ -184,8 +230,13 @@ window.App = {
     console.log(employeeAddress);
     document.getElementById("empAddress").value='';
     var emp;
-    EmploymentContract.deployed().then(function(instance) {
-      emp = instance;
+    var empFactory;
+    EmploymentFactoryContract.deployed().then(function(instance) {
+      empFactory = instance;
+      return empFactory.getEmploymentContract.call({from: account});
+    }).then(function(value) {
+      console.log(value);
+      emp = EmploymentContract.at(value);
       return emp.getContract(employeeAddress);
     }).then(function(salary) {
       console.log(salary);
@@ -197,12 +248,64 @@ window.App = {
         });
     },
 
+    addContract: function() {
+    var employeeAddress = document.getElementById("employeeAddress").value;
+    console.log(employeeAddress);
+    var employeeSalary = document.getElementById("employeeSalary").value;
+    console.log(employeeSalary);
+    var employeeDuration = document.getElementById("employeeDuration").value;
+    console.log(employeeDuration);
+    var emp;
+    var empFactory;
+    EmploymentFactoryContract.deployed().then(function(instance) {
+      empFactory = instance;
+      return empFactory.getEmploymentContract.call({from: account});
+    }).then(function(value) {
+      console.log(value);
+      emp = EmploymentContract.at(value);
+      return emp.addContract(employeeAddress,employeeSalary,employeeDuration,{from: account});
+    }).then(function() {
+        })
+        .catch(function(error) {
+            console.error(error);
+        });
+    },
+
+    AddRating: function() {
+    var employeeAddress = document.getElementById("empRatingAdd").value;
+    console.log(employeeAddress);
+    var employeeRating = document.getElementById("empRating").value;
+    console.log(employeeRating);
+    document.getElementById("empRatingAdd").value='';
+    document.getElementById("empRating").value='';
+    var emp;
+    var empFactory;
+    EmploymentFactoryContract.deployed().then(function(instance) {
+      empFactory = instance;
+      return empFactory.getEmploymentContract.call({from: account});
+    }).then(function(value) {
+      console.log(value);
+      emp = EmploymentContract.at(value);
+      return emp.addRating(employeeAddress,employeeRating,{from: account});
+    }).then(function(value) {
+      console.log(value);
+        })
+        .catch(function(error) {
+            console.error(error);
+        });
+    },
+
     removeContract: function() {
     var employeeAddress = document.getElementById("removeAddress").value;
     console.log(employeeAddress);
     var emp;
-    EmploymentContract.deployed().then(function(instance) {
-      emp = instance;
+    var empFactory;
+    EmploymentFactoryContract.deployed().then(function(instance) {
+      empFactory = instance;
+      return empFactory.getEmploymentContract.call({from: account});
+    }).then(function(value) {
+      console.log(value);
+      emp = EmploymentContract.at(value);
       return emp.removeContract(employeeAddress,{from: account, gas: 4712388, gasPrice: 100000000000});
     }).then(function() {
         })
