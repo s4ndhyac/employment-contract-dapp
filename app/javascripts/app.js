@@ -235,7 +235,9 @@ window.App = {
               var block = result;
               if (block != null && block.transactions != null) {
                block.transactions.forEach( function(e) {
-                 if(e != null) {
+                 console.log(e);
+                 if(e.input != null) {
+                   console.log(e.input);
                       var inputData = abiDecoder.decodeMethod(e.input);
                       var inputDataJson = JSON.stringify(inputData);
                       console.log(inputDataJson);
