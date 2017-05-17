@@ -33,6 +33,8 @@ window.App = {
 
     // Bootstrap the JobContract abstraction for Use.
     JobContract.setProvider(web3.currentProvider);
+    EmployeeContract.setProvider(web3.currentProvider);
+    EmploymentFactoryContract.setProvider(web3.currentProvider);
 
     // Get the initial account balance so it can be displayed.
     web3.eth.getAccounts(function(err, accs) {
