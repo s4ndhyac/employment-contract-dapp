@@ -55,7 +55,7 @@ struct Job {
 	{
 		if(initializeJob(employee, totalJobSalary, jobDailySalary, jobDays))
 		{
-			if(sendCoin(employer, escrowAccount, totalJobSalary))
+			if(sendCoin(tx.origin, escrowAccount, totalJobSalary))
 			{
 				return true;
 			}
