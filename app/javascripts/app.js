@@ -142,6 +142,7 @@ window.App = {
     var jobId = parseInt(document.getElementById("jobId").value);
     //this.setStatus("Adding employee... (please wait)");
     console.log(jobId);
+    var meta;
     var empFactory;
     EmploymentFactoryContract.deployed().then(function(instance) {
       empFactory = instance;
@@ -149,7 +150,8 @@ window.App = {
     }).then(function(value) {
       console.log(value);
       meta = JobContract.at(value);
-      var result = meta.jobDailyUpdate(true, jobId, {from: account});
+      var rating = parseInt(document.getElementById("rating").value);
+      var result = meta.jobDailyUpdate(rating, jobId, {from: account});
       //console.log("result for adding employee at address " + employeeAddr + "is" + result);
       return result;
     }).then(function() {
