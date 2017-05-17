@@ -19,7 +19,7 @@ struct Job {
 		int lastFeedbackDay;
 		int lastSalaryDay;
 		uint salaryPaid;
-        mapping (uint => uint) ratings; 
+        mapping (int => int) ratings; 
   }
 
 	int jobsCount;
@@ -103,7 +103,7 @@ struct Job {
 			return false;
 	}
 
-	function jobDailyUpdate(uint rating, int jobId) returns(bool updated)
+	function jobDailyUpdate(int rating, int jobId) returns(bool updated)
 	{
 		if(jobs[jobId].state != 2)
 		{
