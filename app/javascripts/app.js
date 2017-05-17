@@ -23,7 +23,7 @@ var accounts;
 var account;
 
 const abiDecoder = require('abi-decoder');
-const abiData = [{"constant":true,"inputs":[{"name":"employee","type":"address"}],"name":"getContract","outputs":[{"name":"dailySalary","type":"uint256"},{"name":"contractDays","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"addr","type":"address"}],"name":"getRatingNum","outputs":[{"name":"ratingNum","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"sender","type":"address"},{"name":"receiver","type":"address"},{"name":"amount","type":"uint256"}],"name":"genericSendCoin","outputs":[{"name":"sufficient","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"addr","type":"address"}],"name":"checkBalance","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"employeeAddr","type":"address"},{"name":"rating","type":"uint256"}],"name":"addRating","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"employee","type":"address"},{"name":"amount","type":"uint256"},{"name":"contractDays","type":"uint256"}],"name":"addContract","outputs":[{"name":"added","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"receiver","type":"address"},{"name":"amount","type":"uint256"}],"name":"sendCoin","outputs":[{"name":"sufficient","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"employer","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"employee","type":"address"}],"name":"removeContract","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"escrow","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"addr","type":"address"}],"name":"getBalance","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"inputs":[],"payable":false,"type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"name":"sender","type":"address"},{"indexed":false,"name":"receiver","type":"address"},{"indexed":false,"name":"amount","type":"uint256"},{"indexed":false,"name":"time","type":"uint256"}],"name":"Transaction","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"giver","type":"address"},{"indexed":false,"name":"receiver","type":"address"},{"indexed":false,"name":"rate","type":"uint256"},{"indexed":false,"name":"time","type":"uint256"}],"name":"Rating","type":"event"}]
+const abiData = [{"constant":false,"inputs":[{"name":"sender","type":"address"},{"name":"receiver","type":"address"},{"name":"amount","type":"uint256"}],"name":"sendCoin","outputs":[{"name":"sufficient","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"jobId","type":"int256"}],"name":"lastDayForMarkedAttendance","outputs":[{"name":"day","type":"int256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"jobId","type":"int256"}],"name":"getEmployee","outputs":[{"name":"employerAddr","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"rating","type":"int256"},{"name":"jobId","type":"int256"}],"name":"jobDailyUpdate","outputs":[{"name":"updated","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"jobId","type":"int256"}],"name":"sendSalary","outputs":[{"name":"sufficient","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"employee","type":"address"},{"name":"totalJobSalary","type":"uint256"},{"name":"jobDailySalary","type":"uint256"},{"name":"jobDays","type":"int256"}],"name":"jobReceived","outputs":[{"name":"added","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"jobId","type":"int256"}],"name":"pullSalary","outputs":[{"name":"salaryPulled","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"jobId","type":"int256"}],"name":"lastDayForReleasedSalary","outputs":[{"name":"day","type":"int256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"employer","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"jobId","type":"int256"}],"name":"getJobDetails","outputs":[{"name":"","type":"uint256"},{"name":"","type":"uint256"},{"name":"","type":"int256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"employee","type":"address"},{"name":"totalJobSalary","type":"uint256"},{"name":"jobDailySalary","type":"uint256"},{"name":"jobDays","type":"int256"}],"name":"initializeJob","outputs":[{"name":"added","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"addr","type":"address"}],"name":"getBalance","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"inputs":[],"payable":false,"type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":true,"name":"_to","type":"address"},{"indexed":false,"name":"_value","type":"uint256"},{"indexed":false,"name":"_time","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"giver","type":"address"},{"indexed":true,"name":"receiver","type":"address"},{"indexed":false,"name":"rate","type":"uint256"},{"indexed":false,"name":"time","type":"uint256"}],"name":"Rating","type":"event"}]
 abiDecoder.addABI(abiData);
 
 
@@ -423,6 +423,25 @@ window.App = {
       });
     },
 	
+  getTxnHistory: function () {
+    var empAddress = document.getElementById('empHistoryAdd').value;
+   var status = document.getElementById ('empHistory');
+  var meta;
+      var empFactory;
+    EmploymentFactoryContract.deployed().then(function(instance) {
+      empFactory = instance;
+      return empFactory.getEmploymentContract.call({from: account});
+    }).then(function(value) {
+      console.log(value);
+      meta = JobContract.at(value);
+      meta.Transfer({_to: empAddress},{fromBlock:0, toBlock: 'latest'}).watch((err, response) => {  //set up listener for the AuctionClosed Event
+        //once the event has been detected, take actions as desired
+        console.log(response);
+        status.innerHTML += JSON.stringify(response.args);
+      });
+    });
+  },
+
 	getTransactionsByAccount: function () {
         var myaccount = document.getElementById("empHistoryAdd").value;
         console.log(myaccount);
@@ -457,7 +476,7 @@ window.App = {
                       var inputDataJson = JSON.stringify(inputData);
                       console.log(inputDataJson);
                       if(inputData != null) {
-                        if((inputData.name=="sendCoin" || inputData.name=="genericSendCoin" || inputData.name=="addRating") && (inputData.params[0].value==myaccount ||inputData.params[1].value==myaccount || inputData.params[1].value==myaccount)) {
+                        if((inputData.name=="sendCoin") && (inputData.params[0].value==myaccount ||inputData.params[1].value==myaccount)) {
                         console.log(block.timestamp);
                         console.log(inputData.params[1].value);
                         empHistoryDict[block.timestamp] = inputData.params[1].value;
@@ -475,6 +494,7 @@ window.App = {
     }
 
 };
+
 
 window.addEventListener('load', function() {
   // Checking if Web3 has been injected by the browser (Mist/MetaMask)
