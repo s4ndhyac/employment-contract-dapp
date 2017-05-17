@@ -22,6 +22,8 @@ struct Job {
         mapping (int => int) ratings; 
   }
 
+  address public employer;
+
 	int jobsCount;
 
 	mapping (int => Job) jobs;
@@ -36,10 +38,10 @@ struct Job {
 	event Transfer(address indexed _from, address indexed _to, uint256 _value, uint _time);
     event Rating(address indexed giver, address indexed receiver, uint rate, uint time);
 
-	function initializeJob(address employer, address employee, uint totalJobSalary,
+	function initializeJob(address employee, uint totalJobSalary,
 		uint jobDailySalary, int jobDays) returns (bool added)
 	{
-		jobs[jobsCount] = Job({employeeAddr : employee, employerAddr : employer, totalAmount: totalJobSalary,
+		jobs[jobsCount] = Job({employeeAddr : employee, employerAddr : tx.origin, totalAmount: totalJobSalary,
 			dailyAmount : jobDailySalary , state : 0, jobDays : jobDays,
 			lastFeedbackDay : 0, lastSalaryDay : 0, salaryPaid : 0});
 
@@ -48,10 +50,10 @@ struct Job {
 	}
 
 
-	function jobReceived(address employer, address  employee, uint totalJobSalary,
+	function jobReceived(address  employee, uint totalJobSalary,
 		uint jobDailySalary, int jobDays) returns(bool added)
 	{
-		if(initializeJob(employer, employee, totalJobSalary, jobDailySalary, jobDays))
+		if(initializeJob(employee, totalJobSalary, jobDailySalary, jobDays))
 		{
 			if(sendCoin(employer, escrowAccount, totalJobSalary))
 			{
@@ -127,6 +129,7 @@ struct Job {
 	}
 
 	function JobContract() {
+        employer = tx.origin;
 		balances[tx.origin] = 10000;
 		jobsCount = 0;
 		escrowAccount = 0x37634d163369a2e26cdfb70cd0ddc1636419f181;

@@ -69,9 +69,13 @@ window.App = {
     var self = this;
 
     var meta;
-    JobContract.deployed().then(function(instance) {
-      meta = instance;
-      console.log(account);
+    var empFactory;
+    EmploymentFactoryContract.deployed().then(function(instance) {
+      empFactory = instance;
+      return empFactory.getEmploymentContract.call({from: account});
+    }).then(function(value) {
+      console.log(value);
+      meta = JobContract.at(value);
       return meta.getBalance.call(account, {from: account});
     }).then(function(value) {
       var balance_element = document.getElementById("balance");
@@ -86,8 +90,13 @@ window.App = {
     var self = this;
 
     var meta;
-    JobContract.deployed().then(function(instance) {
-      meta = instance;
+    var empFactory;
+    EmploymentFactoryContract.deployed().then(function(instance) {
+      empFactory = instance;
+      return empFactory.getEmploymentContract.call({from: account});
+    }).then(function(value) {
+      console.log(value);
+      meta = JobContract.at(value);
       var addr = document.getElementById("employerAddr").value;
       return meta.getBalance.call(addr, {from: account});
     }).then(function(value) {
@@ -104,13 +113,17 @@ window.App = {
 
     var amount = parseInt(document.getElementById("amount").value);
     var receiver = document.getElementById("receiver").value;
-
+      
     this.setStatus("Initiating transaction... (please wait)");
 
     var meta;
-    JobContract.deployed().then(function(instance) {
-      meta = instance;
-      console.log(receiver);
+    var empFactory;
+    EmploymentFactoryContract.deployed().then(function(instance) {
+      empFactory = instance;
+      return empFactory.getEmploymentContract.call({from: account});
+    }).then(function(value) {
+      console.log(value);
+      meta = JobContract.at(value);
       var result = meta.sendCoin(account, receiver, amount, {from: account});
       console.log(result);
       return result;
@@ -129,9 +142,13 @@ window.App = {
     var jobId = parseInt(document.getElementById("jobId").value);
     //this.setStatus("Adding employee... (please wait)");
     console.log(jobId);
-    var meta;
-    JobContract.deployed().then(function(instance) {
-      meta = instance;
+    var empFactory;
+    EmploymentFactoryContract.deployed().then(function(instance) {
+      empFactory = instance;
+      return empFactory.getEmploymentContract.call({from: account});
+    }).then(function(value) {
+      console.log(value);
+      meta = JobContract.at(value);
       var result = meta.jobDailyUpdate(true, jobId, {from: account});
       //console.log("result for adding employee at address " + employeeAddr + "is" + result);
       return result;
@@ -150,8 +167,13 @@ window.App = {
     //this.setStatus("Adding employee... (please wait)");
     console.log(jobId);
     var meta;
-    JobContract.deployed().then(function(instance) {
-      meta = instance;
+    var empFactory;
+    EmploymentFactoryContract.deployed().then(function(instance) {
+      empFactory = instance;
+      return empFactory.getEmploymentContract.call({from: account});
+    }).then(function(value) {
+      console.log(value);
+      meta = JobContract.at(value);
       var result = meta.pullSalary(jobId, {from: account});
       //console.log("result for adding employee at address " + employeeAddr + "is" + result);
       return result;
@@ -215,8 +237,13 @@ window.App = {
     var self = this;
 
     var meta;
-    JobContract.deployed().then(function(instance) {
-      meta = instance;
+    var empFactory;
+    EmploymentFactoryContract.deployed().then(function(instance) {
+      empFactory = instance;
+      return empFactory.getEmploymentContract.call({from: account});
+    }).then(function(value) {
+      console.log(value);
+      meta = JobContract.at(value);
       console.log(account);
       var jobId = parseInt(document.getElementById("jobId").value);
 
@@ -237,8 +264,13 @@ window.App = {
       var self = this;
 
       var meta;
-      JobContract.deployed().then(function(instance) {
-        meta = instance;
+      var empFactory;
+    EmploymentFactoryContract.deployed().then(function(instance) {
+      empFactory = instance;
+      return empFactory.getEmploymentContract.call({from: account});
+    }).then(function(value) {
+      console.log(value);
+      meta = JobContract.at(value);
         console.log(account);
         var jobId = parseInt(document.getElementById("jobId").value);
 
@@ -257,8 +289,13 @@ window.App = {
           var self = this;
 
           var meta;
-          JobContract.deployed().then(function(instance) {
-            meta = instance;
+          var empFactory;
+    EmploymentFactoryContract.deployed().then(function(instance) {
+      empFactory = instance;
+      return empFactory.getEmploymentContract.call({from: account});
+    }).then(function(value) {
+      console.log(value);
+      meta = JobContract.at(value);
             console.log(account);
             var jobId = parseInt(document.getElementById("jobId").value);
             var day = parseInt(document.getElementById("day").value);
@@ -281,8 +318,13 @@ window.App = {
               var self = this;
 
               var meta;
-              JobContract.deployed().then(function(instance) {
-                meta = instance;
+              var empFactory;
+    EmploymentFactoryContract.deployed().then(function(instance) {
+      empFactory = instance;
+      return empFactory.getEmploymentContract.call({from: account});
+    }).then(function(value) {
+      console.log(value);
+      meta = JobContract.at(value);
                 console.log(account);
                 var jobId = parseInt(document.getElementById("jobId").value);
                 var day = parseInt(document.getElementById("day").value);
@@ -352,20 +394,23 @@ window.App = {
       var self = this;
 
       var employeeAddr = document.getElementById("employeeAddr").value;
-      var employerAddr = document.getElementById("employerAddr").value;
       var totalJobSalary = parseInt(document.getElementById("jobSalary").value);
       var jobDailySalary = parseInt(document.getElementById("jobDailySalary").value);
       var jobDays = parseInt(document.getElementById("jobDays").value);
 
       console.log(employeeAddr);
-      console.log(employerAddr);
       this.setStatus("Adding job... (please wait)");
 
       var meta;
-      JobContract.deployed().then(function(instance) {
-        meta = instance;
-        var result = meta.jobReceived(employerAddr, employeeAddr,totalJobSalary,
-          jobDailySalary, jobDays, {from: account});
+      var empFactory;
+    EmploymentFactoryContract.deployed().then(function(instance) {
+      empFactory = instance;
+      return empFactory.getEmploymentContract.call({from: account});
+    }).then(function(value) {
+      console.log(value);
+      meta = JobContract.at(value);
+        var result = meta.jobReceived(employeeAddr,totalJobSalary,
+          jobDailySalary, jobDays, {from: account, gas: 4712388, gasPrice: 100000000000});
         console.log("result for adding job " + "is" + result);
         return result;
       }).then(function() {
