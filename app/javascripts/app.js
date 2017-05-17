@@ -22,9 +22,9 @@ var EmploymentFactoryContract = contract(employment_factory_contract);
 var accounts;
 var account;
 
-const abiDecoder = require('abi-decoder');
-const abiData = [{"constant":false,"inputs":[{"name":"sender","type":"address"},{"name":"receiver","type":"address"},{"name":"amount","type":"uint256"}],"name":"sendCoin","outputs":[{"name":"sufficient","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"jobId","type":"int256"}],"name":"lastDayForMarkedAttendance","outputs":[{"name":"day","type":"int256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"jobId","type":"int256"}],"name":"getEmployee","outputs":[{"name":"employerAddr","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"rating","type":"int256"},{"name":"jobId","type":"int256"}],"name":"jobDailyUpdate","outputs":[{"name":"updated","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"jobId","type":"int256"}],"name":"sendSalary","outputs":[{"name":"sufficient","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"employee","type":"address"},{"name":"totalJobSalary","type":"uint256"},{"name":"jobDailySalary","type":"uint256"},{"name":"jobDays","type":"int256"}],"name":"jobReceived","outputs":[{"name":"added","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"jobId","type":"int256"}],"name":"pullSalary","outputs":[{"name":"salaryPulled","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"jobId","type":"int256"}],"name":"lastDayForReleasedSalary","outputs":[{"name":"day","type":"int256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"employer","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"jobId","type":"int256"}],"name":"getJobDetails","outputs":[{"name":"","type":"uint256"},{"name":"","type":"uint256"},{"name":"","type":"int256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"employee","type":"address"},{"name":"totalJobSalary","type":"uint256"},{"name":"jobDailySalary","type":"uint256"},{"name":"jobDays","type":"int256"}],"name":"initializeJob","outputs":[{"name":"added","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"addr","type":"address"}],"name":"getBalance","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"inputs":[],"payable":false,"type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":true,"name":"_to","type":"address"},{"indexed":false,"name":"_value","type":"uint256"},{"indexed":false,"name":"_time","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"giver","type":"address"},{"indexed":true,"name":"receiver","type":"address"},{"indexed":false,"name":"rate","type":"uint256"},{"indexed":false,"name":"time","type":"uint256"}],"name":"Rating","type":"event"}]
-abiDecoder.addABI(abiData);
+// const abiDecoder = require('abi-decoder');
+// const abiData = [{"constant":false,"inputs":[{"name":"sender","type":"address"},{"name":"receiver","type":"address"},{"name":"amount","type":"uint256"}],"name":"sendCoin","outputs":[{"name":"sufficient","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"jobId","type":"int256"}],"name":"lastDayForMarkedAttendance","outputs":[{"name":"day","type":"int256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"jobId","type":"int256"}],"name":"getEmployee","outputs":[{"name":"employerAddr","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"rating","type":"int256"},{"name":"jobId","type":"int256"}],"name":"jobDailyUpdate","outputs":[{"name":"updated","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"jobId","type":"int256"}],"name":"sendSalary","outputs":[{"name":"sufficient","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"employee","type":"address"},{"name":"totalJobSalary","type":"uint256"},{"name":"jobDailySalary","type":"uint256"},{"name":"jobDays","type":"int256"}],"name":"jobReceived","outputs":[{"name":"added","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"jobId","type":"int256"}],"name":"pullSalary","outputs":[{"name":"salaryPulled","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"jobId","type":"int256"}],"name":"lastDayForReleasedSalary","outputs":[{"name":"day","type":"int256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"employer","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"jobId","type":"int256"}],"name":"getJobDetails","outputs":[{"name":"","type":"uint256"},{"name":"","type":"uint256"},{"name":"","type":"int256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"employee","type":"address"},{"name":"totalJobSalary","type":"uint256"},{"name":"jobDailySalary","type":"uint256"},{"name":"jobDays","type":"int256"}],"name":"initializeJob","outputs":[{"name":"added","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"addr","type":"address"}],"name":"getBalance","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"inputs":[],"payable":false,"type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":true,"name":"_to","type":"address"},{"indexed":false,"name":"_value","type":"uint256"},{"indexed":false,"name":"_time","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"giver","type":"address"},{"indexed":true,"name":"receiver","type":"address"},{"indexed":false,"name":"rate","type":"uint256"},{"indexed":false,"name":"time","type":"uint256"}],"name":"Rating","type":"event"}]
+// abiDecoder.addABI(abiData);
 
 
 window.App = {
@@ -442,56 +442,56 @@ window.App = {
     });
   },
 
-	getTransactionsByAccount: function () {
-        var myaccount = document.getElementById("empHistoryAdd").value;
-        console.log(myaccount);
-        document.getElementById("empHistoryAdd").value='';
-        web3.eth.getBlockNumber(function(error, result){
-          if (error != null) {
-            alert("There was an error fetching end block number");
-            return;
-          }
-          var endBlockNumber = result;
-          console.log("Using endBlockNumber: " + endBlockNumber);
-          var startBlockNumber = 0;
-          console.log("Using startBlockNumber: " + startBlockNumber);
-          console.log("Searching for transactions to/from account \"" + myaccount + "\" within blocks "  + startBlockNumber + " and " + endBlockNumber);
-          var empHistoryDict = {};
-          for (var i = startBlockNumber; i <= endBlockNumber; i++) {
-            if (i % 1000 == 0) {
-            console.log("Searching block " + i);
-            }
-            web3.eth.getBlock(i, true, function(error, result){
-              if (error != null) {
-                alert("There was an error fetching end block number");
-                return;
-              }
-              var block = result;
-              if (block != null && block.transactions != null) {
-               block.transactions.forEach( function(e) {
-                 console.log(e);
-                 if(e.input != null) {
-                   console.log(e.input);
-                      var inputData = abiDecoder.decodeMethod(e.input);
-                      var inputDataJson = JSON.stringify(inputData);
-                      console.log(inputDataJson);
-                      if(inputData != null) {
-                        if((inputData.name=="sendCoin") && (inputData.params[0].value==myaccount ||inputData.params[1].value==myaccount)) {
-                        console.log(block.timestamp);
-                        console.log(inputData.params[1].value);
-                        empHistoryDict[block.timestamp] = inputData.params[1].value;
-                        console.log(JSON.stringify(empHistoryDict));
-                        }
-                      }
-                 }
-              })
-                 var history_element = document.getElementById("empHistory");
-                 history_element.innerHTML = JSON.stringify(empHistoryDict);
-            }
-           });
-        }
-      });
-    }
+	// getTransactionsByAccount: function () {
+  //       var myaccount = document.getElementById("empHistoryAdd").value;
+  //       console.log(myaccount);
+  //       document.getElementById("empHistoryAdd").value='';
+  //       web3.eth.getBlockNumber(function(error, result){
+  //         if (error != null) {
+  //           alert("There was an error fetching end block number");
+  //           return;
+  //         }
+  //         var endBlockNumber = result;
+  //         console.log("Using endBlockNumber: " + endBlockNumber);
+  //         var startBlockNumber = 0;
+  //         console.log("Using startBlockNumber: " + startBlockNumber);
+  //         console.log("Searching for transactions to/from account \"" + myaccount + "\" within blocks "  + startBlockNumber + " and " + endBlockNumber);
+  //         var empHistoryDict = {};
+  //         for (var i = startBlockNumber; i <= endBlockNumber; i++) {
+  //           if (i % 1000 == 0) {
+  //           console.log("Searching block " + i);
+  //           }
+  //           web3.eth.getBlock(i, true, function(error, result){
+  //             if (error != null) {
+  //               alert("There was an error fetching end block number");
+  //               return;
+  //             }
+  //             var block = result;
+  //             if (block != null && block.transactions != null) {
+  //              block.transactions.forEach( function(e) {
+  //                console.log(e);
+  //                if(e.input != null) {
+  //                  console.log(e.input);
+  //                     var inputData = abiDecoder.decodeMethod(e.input);
+  //                     var inputDataJson = JSON.stringify(inputData);
+  //                     console.log(inputDataJson);
+  //                     if(inputData != null) {
+  //                       if((inputData.name=="sendCoin") && (inputData.params[0].value==myaccount ||inputData.params[1].value==myaccount)) {
+  //                       console.log(block.timestamp);
+  //                       console.log(inputData.params[1].value);
+  //                       empHistoryDict[block.timestamp] = inputData.params[1].value;
+  //                       console.log(JSON.stringify(empHistoryDict));
+  //                       }
+  //                     }
+  //                }
+  //             })
+  //                var history_element = document.getElementById("empHistory");
+  //                history_element.innerHTML = JSON.stringify(empHistoryDict);
+  //           }
+  //          });
+  //       }
+  //     });
+  //   }
 
 };
 
