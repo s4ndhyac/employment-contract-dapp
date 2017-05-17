@@ -422,6 +422,25 @@ window.App = {
         self.setStatus("Error adding job; see log.");
       });
     },
+
+    getRatingHistory: function () {
+    var empAddress = document.getElementById('empRatingHistoryAdd').value;
+   var status = document.getElementById ('empRatingHistory');
+  var meta;
+      var empFactory;
+    EmploymentFactoryContract.deployed().then(function(instance) {
+      empFactory = instance;
+      return empFactory.getEmploymentContract.call({from: account});
+    }).then(function(value) {
+      console.log(value);
+      meta = JobContract.at(value);
+      meta.Rating({receiver: empAddress},{fromBlock:0, toBlock: 'latest'}).watch((err, response) => {  //set up listener for the AuctionClosed Event
+        //once the event has been detected, take actions as desired
+        console.log(response);
+        status.innerHTML += JSON.stringify(response.args);
+      });
+    });
+  },
 	
   getTxnHistory: function () {
     var empAddress = document.getElementById('empHistoryAdd').value;
