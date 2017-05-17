@@ -1,18 +1,18 @@
 pragma solidity ^0.4.2;
 
-import "./EmploymentContract.sol";
+import "./JobContract.sol";
 
 contract EmploymentContractFactory {
 
-    mapping (address => EmploymentContract) contracts;
+    mapping (address => JobContract) contracts;
 
     function newEmployment() public returns (address newContract) {
-        EmploymentContract employment = new EmploymentContract();
+        JobContract employment = new JobContract();
         contracts[msg.sender] = employment;
         return employment;
     }
 
-    function getEmploymentContract() public returns (EmploymentContract employment) {
+    function getEmploymentContract() public returns (JobContract employment) {
         return contracts[msg.sender];
     }
 
