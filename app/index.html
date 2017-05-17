@@ -1,18 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Employment Contract</title>
+  <title>MetaCoin - Truffle Webpack Demo w/ Frontend</title>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
   <script src="./app.js"></script>
 </head>
 <body>
-  <h1>Add Employee</h1>
-  <br><label for="addEmployeeName">Employee Name:</label><input type="text" id="addEmployeeName" placeholder="e.g., sandhya"></input>
-  <br><label for="addEmployeeSkill">Employee Skill:</label><input type="text" id="addEmployeeSkill" placeholder="e.g., coding"></input>
-  <br><label for="addEmployeeRole">Role:</label><input type="text" id="addEmployeeRole" placeholder="e.g., 1"></input>
+  <h1>Employment Contract</h1>
+  <h3>You have <span class="black"><span id="balance"></span> META</span></h3>
+
+  <br>
+  <h1>Send MetaCoin</h1>
+  <br><label for="amount">Amount:</label><input type="text" id="amount" placeholder="e.g., 95"></input>
+  <br><label for="receiver">To Address:</label><input type="text" id="receiver" placeholder="e.g., 0x93e66d9baea28c17d9fc393b53e3fbdd76899dae"></input>
+  <br><br><button id="send" onclick="App.sendCoin()">Send MetaCoin</button>
+  <br><br>
+  <span id="status"></span>
+  <br>
+  <span class="hint"><strong>Hint:</strong> open the browser developer console to view any errors and warnings.</span>
+
+  <h1>Add User</h1>
+  <br><label for="addEmployeeName">User Name:</label><input type="text" id="addEmployeeName" placeholder="e.g., sandhya"></input>
+  <br><label for="addEmployeeSkill">User Skill:</label><input type="text" id="addEmployeeSkill" placeholder="e.g., coding"></input>
+  <br><label for="addEmployeeRole">Role:</label><input type="text" id="addEmployeeRole" placeholder="e.g., 0/1"></input>
   <br><br><button id="addEmployee" onclick="App.addEmployee();window.location.reload();">Add Contract</button>
   <br>
   <br>
+
+  <br><label for="jobSalary">jobSalary:</label><input type="text" id="jobSalary" placeholder="e.g.,100"></input>
+
+  <br><label for="jobDailySalary">jobDailySalary:</label><input type="text" id="jobDailySalary" placeholder="e.g.,100"></input>
+
+  <br><label for="jobDays">jobDays:</label><input type="text" id="jobDays" placeholder="e.g.,100"></input>
+
+
+  <br><br><button id="addJob" onclick="App.addJob()">Add job</button>
+
   <h1>Get Employer from factory</h1>
   <br><br><button id="getEmployer" onclick="App.getEmployer()">Get Employer</button>
   <p>Employer details is: <span class="black"><span id="getEmployerDetails"></span></span></p>
@@ -28,50 +51,46 @@
   <p>Employee details is: <span class="black"><span id="getEmpDetails"></span></span></p>
   <br>
   <br>
-  <h1>Employment Contract</h1>
-  <h3>Employer Balance: You have <span class="black"><span id="balance"></span> ETHER</span></h3>
-  <h1>Add Employment Contract</h1>
-  <br><label for="employeeAddress">Employee Address:</label><input type="text" id="employeeAddress" placeholder="e.g., 0x93e66d9baea28c17d9fc393b53e3fbdd76899dae"></input>
-  <br><label for="employeeSalary">Employee Monthly Salary:</label><input type="text" id="employeeSalary" placeholder="e.g., 1000"></input>
-  <br><label for="employeeDuration">Employee Contract duration:</label><input type="text" id="employeeDuration" placeholder="e.g., 1000"></input>
-  <br><br><button id="addContract" onclick="App.addContract();window.location.reload();">Add Contract</button>
-  <br>
-  <br>
-  <h1>Get Employment Contract</h1>
-  <br><label for="empAddress">Employee Address:</label><input type="text" id="empAddress" placeholder="e.g., 0x93e66d9baea28c17d9fc393b53e3fbdd76899dae"></input>
-  <br><br><button id="getContract" onclick="App.getContract()">Get Contract</button>
-  <p>Employee salary is: <span class="black"><span id="getSalary"></span> ETHER</span></p>
-  <br>
-  <br>
-  <h1>Remove Employment Contract</h1>
-  <br><label for="removeAddress">Employee Address:</label><input type="text" id="removeAddress" placeholder="e.g., 0x93e66d9baea28c17d9fc393b53e3fbdd76899dae"></input>
-  <br><br><button id="removeContract" onclick="App.removeContract();window.location.reload();">Remove Contract</button>
-  <br>
-  <br>
-  <h1>Send Ether</h1>
-  <br><label for="amount">Salary Amount:</label><input type="text" id="amount" placeholder="e.g., 95"></input>
-  <br><label for="receiver">To Address:</label><input type="text" id="receiver" placeholder="e.g., 0x93e66d9baea28c17d9fc393b53e3fbdd76899dae"></input>
-  <br><br><button id="pay" onclick="App.sendCoin()">Send Ether</button>
-  <br><br>
-  <h1>Check Balance</h1>
-  <br><label for="empBalanceAdd">Employee Address:</label><input type="text" id="empBalanceAdd" placeholder="e.g., 0x93e66d9baea28c17d9fc393b53e3fbdd76899dae"></input>
-  <br><br><button id="checkBalance" onclick="App.checkBalance()">Check Balance</button>
-  <p>Employee balance is: <span class="black"><span id="empBalance"></span> ETHER</span></p>
-  <br>
-  <br>
-  <h1>Add Rating</h1>
-  <br><label for="empRatingAdd">Employee Address:</label><input type="text" id="empRatingAdd" placeholder="e.g., 0x93e66d9baea28c17d9fc393b53e3fbdd76899dae"></input>
-  <br><label for="empRating">Employee Rating:</label><input type="text" id="empRating" placeholder="e.g., 1-10"></input>
-  <br><br><button id="AddRating" onclick="App.AddRating()">Add Rating</button>
-  <br>
-  <br>
+
+  <br><br><button id="getBalance" onclick="App.getBalance()">Get balance from employer field</button>
+
+  <br><label for="jobId">job id:</label><input type="text" id="jobId" placeholder="e.g.,100"></input>
+
+  <br><br><button id="markJob" onclick="App.markJobStatusDaily()">mark employee status</button>
+
+  <br><br><button id="pullSalary" onclick="App.pullSalary()">pull employee salary</button>
+
+
+  <br><br><button id="markJob" onclick="App.lastDayForMarkedAttendance()">get last day for employee attendance</button>
+
+  <span id="lastDayForMarkedAttendance"></span>
+
+
+  <br><br><button id="markJob" onclick="App.lastDayForReleasedSalary()">get last day for employee salary</button>
+
+  <span id="lastDayForReleasedSalary"></span>
+
+  <br><br><button id="salaryStatus" onclick="App.salaryStatus()">salaryStatus employee</button>
+
+  <br><br><button id="attendanceStatus" onclick="App.attendanceStatus()">attendanceStatus employee</button>
+
+  <br><label for="day">day:</label><input type="text" id="day" placeholder="e.g.,100"></input>
+  
   <h1>Get Transaction History</h1>
   <br><label for="empHistoryAdd">Employee History:</label><input type="text" id="empHistoryAdd" placeholder="e.g., 0x93e66d9baea28c17d9fc393b53e3fbdd76899dae"></input>
   <br><br><button id="getHistory" onclick="App.getTransactionsByAccount()">Get History</button>
   <p>Employee Transaction History is: <span class="black"><span id="empHistory"></span></span></p>
   <br>
   <br>
-  <span id="status"></span>
-  <br>
+
+
+  <span id="estatus"></span>
+
+
+
+
+  <span id="gen"></span>
+
+
 </body>
 </html>

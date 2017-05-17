@@ -6,12 +6,13 @@ import { default as Web3} from 'web3';
 import { default as contract } from 'truffle-contract'
 
 // Import our contract artifacts and turn them into usable abstractions.
-import employment_contract from '../../build/contracts/EmploymentContract.json'
+import JobContract_artifacts from '../../build/contracts/JobContract.json'
 import employee_contract from '../../build/contracts/EmployeeContract.json'
 import employment_factory_contract from '../../build/contracts/EmploymentContractFactory.json'
 
 // MetaCoin is our usable abstraction, which we'll use through the code below.
-var EmploymentContract = contract(employment_contract);
+
+var JobContract = contract(JobContract_artifacts);
 var EmployeeContract = contract(employee_contract);
 var EmploymentFactoryContract = contract(employment_factory_contract);
 
@@ -22,18 +23,17 @@ var accounts;
 var account;
 
 const abiDecoder = require('abi-decoder');
-const abiData = [{"constant":true,"inputs":[{"name":"employee","type":"address"}],"name":"getContract","outputs":[{"name":"salary","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"addr","type":"address"}],"name":"checkBalance","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"receiver","type":"address"},{"name":"amount","type":"uint256"}],"name":"sendCoin","outputs":[{"name":"sufficient","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"employer","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"employee","type":"address"},{"name":"amount","type":"uint256"}],"name":"addContract","outputs":[],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"employee","type":"address"}],"name":"removeContract","outputs":[],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"addr","type":"address"}],"name":"getBalance","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"inputs":[],"payable":false,"type":"constructor"}]
+const abiData = [{"constant":true,"inputs":[{"name":"employee","type":"address"}],"name":"getContract","outputs":[{"name":"dailySalary","type":"uint256"},{"name":"contractDays","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"addr","type":"address"}],"name":"getRatingNum","outputs":[{"name":"ratingNum","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"sender","type":"address"},{"name":"receiver","type":"address"},{"name":"amount","type":"uint256"}],"name":"genericSendCoin","outputs":[{"name":"sufficient","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"addr","type":"address"}],"name":"checkBalance","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"employeeAddr","type":"address"},{"name":"rating","type":"uint256"}],"name":"addRating","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"employee","type":"address"},{"name":"amount","type":"uint256"},{"name":"contractDays","type":"uint256"}],"name":"addContract","outputs":[{"name":"added","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"receiver","type":"address"},{"name":"amount","type":"uint256"}],"name":"sendCoin","outputs":[{"name":"sufficient","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"employer","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"employee","type":"address"}],"name":"removeContract","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"escrow","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"addr","type":"address"}],"name":"getBalance","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"inputs":[],"payable":false,"type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"name":"sender","type":"address"},{"indexed":false,"name":"receiver","type":"address"},{"indexed":false,"name":"amount","type":"uint256"},{"indexed":false,"name":"time","type":"uint256"}],"name":"Transaction","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"giver","type":"address"},{"indexed":false,"name":"receiver","type":"address"},{"indexed":false,"name":"rate","type":"uint256"},{"indexed":false,"name":"time","type":"uint256"}],"name":"Rating","type":"event"}]
 abiDecoder.addABI(abiData);
+
 
 window.App = {
   start: function() {
     var self = this;
 
-    // Bootstrap the MetaCoin abstraction for Use.
-    EmploymentContract.setProvider(web3.currentProvider);
-    EmployeeContract.setProvider(web3.currentProvider);
-    EmploymentFactoryContract.setProvider(web3.currentProvider);
-    
+    // Bootstrap the JobContract abstraction for Use.
+    JobContract.setProvider(web3.currentProvider);
+
     // Get the initial account balance so it can be displayed.
     web3.eth.getAccounts(function(err, accs) {
       if (err != null) {
@@ -58,17 +58,19 @@ window.App = {
     status.innerHTML = message;
   },
 
+  setTestBox: function(message) {
+    var status = document.getElementById("gen");
+    status.innerHTML = message;
+  },
+
   refreshBalance: function() {
     var self = this;
-    var emp;
-    var empFactory;
-    EmploymentFactoryContract.deployed().then(function(instance) {
-      empFactory = instance;
-      return empFactory.getEmploymentContract.call({from: account});
-    }).then(function(value) {
-      console.log(value);
-      emp = EmploymentContract.at(value);
-      return emp.getBalance.call(account, {from: account});
+
+    var meta;
+    JobContract.deployed().then(function(instance) {
+      meta = instance;
+      console.log(account);
+      return meta.getBalance.call(account, {from: account});
     }).then(function(value) {
       var balance_element = document.getElementById("balance");
       balance_element.innerHTML = value.valueOf();
@@ -78,36 +80,16 @@ window.App = {
     });
   },
 
-    getEmpCount: function() {
+  getBalance : function(){
     var self = this;
-    var emp;
-    EmployeeContract.deployed().then(function(instance) {
-      emp = instance;
-      return emp.returnEmployeeCount.call(account, {from: account});
-    }).then(function(value) {
-      var emp_count = document.getElementById("empCount");
-      emp_count.innerHTML = value.valueOf();
-    }).catch(function(e) {
-      console.log(e);
-      self.setStatus("Error getting emp count; see log.");
-    });
-  },
 
-  checkBalance: function() {
-    var employeeAddress = document.getElementById("empBalanceAdd").value;
-    console.log(employeeAddress);
-    document.getElementById("empBalanceAdd").value='';
-    var emp;
-    var empFactory;
-    EmploymentFactoryContract.deployed().then(function(instance) {
-      empFactory = instance;
-      return empFactory.getEmploymentContract.call({from: account});
+    var meta;
+    JobContract.deployed().then(function(instance) {
+      meta = instance;
+      var addr = document.getElementById("employerAddr").value;
+      return meta.getBalance.call(addr, {from: account});
     }).then(function(value) {
-      console.log(value);
-      emp = EmploymentContract.at(value);
-      return emp.checkBalance.call(employeeAddress,{from: account});
-    }).then(function(value) {
-      var balance_element = document.getElementById("empBalance");
+      var balance_element = document.getElementById("gen");
       balance_element.innerHTML = value.valueOf();
     }).catch(function(e) {
       console.log(e);
@@ -117,20 +99,19 @@ window.App = {
 
   sendCoin: function() {
     var self = this;
+
     var amount = parseInt(document.getElementById("amount").value);
     var receiver = document.getElementById("receiver").value;
-    this.setStatus("Creating contract");
-    document.getElementById("amount").value='';
-    document.getElementById("receiver").value='';
-    var emp;
-    var empFactory;
-    EmploymentFactoryContract.deployed().then(function(instance) {
-      empFactory = instance;
-      return empFactory.getEmploymentContract.call({from: account});
-    }).then(function(value) {
-      console.log(value);
-      emp = EmploymentContract.at(value);
-      return emp.sendCoin(receiver, amount, {from: account});
+
+    this.setStatus("Initiating transaction... (please wait)");
+
+    var meta;
+    JobContract.deployed().then(function(instance) {
+      meta = instance;
+      console.log(receiver);
+      var result = meta.sendCoin(account, receiver, amount, {from: account});
+      console.log(result);
+      return result;
     }).then(function() {
       self.setStatus("Transaction complete!");
       self.refreshBalance();
@@ -140,6 +121,46 @@ window.App = {
     });
   },
 
+    markJobStatusDaily: function() {
+    var self = this;
+
+    var jobId = parseInt(document.getElementById("jobId").value);
+    //this.setStatus("Adding employee... (please wait)");
+    console.log(jobId);
+    var meta;
+    JobContract.deployed().then(function(instance) {
+      meta = instance;
+      var result = meta.jobDailyUpdate(true, jobId, {from: account});
+      //console.log("result for adding employee at address " + employeeAddr + "is" + result);
+      return result;
+    }).then(function() {
+      self.setStatus("Added employee!");
+    }).catch(function(e) {
+      console.log(e);
+      self.setStatus("Error adding coin; see log.");
+    });
+  },
+
+  pullSalary: function() {
+    var self = this;
+
+    var jobId = parseInt(document.getElementById("jobId").value);
+    //this.setStatus("Adding employee... (please wait)");
+    console.log(jobId);
+    var meta;
+    JobContract.deployed().then(function(instance) {
+      meta = instance;
+      var result = meta.pullSalary(jobId, {from: account});
+      //console.log("result for adding employee at address " + employeeAddr + "is" + result);
+      return result;
+    }).then(function() {
+      self.setStatus("Added employee!");
+    }).catch(function(e) {
+      console.log(e);
+      self.setStatus("Error adding coin; see log.");
+    });
+  },
+  
   addEmployee: function() {
     var employeeSkill = document.getElementById("addEmployeeSkill").value;
     console.log(employeeSkill);
@@ -187,6 +208,126 @@ window.App = {
         });
     },
 
+
+  lastDayForReleasedSalary: function() {
+    var self = this;
+
+    var meta;
+    JobContract.deployed().then(function(instance) {
+      meta = instance;
+      console.log(account);
+      var jobId = parseInt(document.getElementById("jobId").value);
+
+      return meta.lastDayForReleasedSalary.call(jobId, {from: account});
+    }).then(function(value) {
+      var balance_element = document.getElementById("lastDayForReleasedSalary");
+      console.log(value);
+      console.log(value.valueOf());
+      balance_element.innerHTML = value.valueOf();
+    }).catch(function(e) {
+      console.log(e);
+      self.setStatus("Error getting balance; see log.");
+    });
+  },
+
+
+    lastDayForMarkedAttendance: function() {
+      var self = this;
+
+      var meta;
+      JobContract.deployed().then(function(instance) {
+        meta = instance;
+        console.log(account);
+        var jobId = parseInt(document.getElementById("jobId").value);
+
+        return meta.lastDayForMarkedAttendance.call(jobId, {from: account});
+      }).then(function(value) {
+        var balance_element = document.getElementById("lastDayForMarkedAttendance");
+        balance_element.innerHTML = value.valueOf();
+      }).catch(function(e) {
+        console.log(e);
+        self.setStatus("Error getting balance; see log.");
+      });
+    },
+
+
+        salaryStatus: function() {
+          var self = this;
+
+          var meta;
+          JobContract.deployed().then(function(instance) {
+            meta = instance;
+            console.log(account);
+            var jobId = parseInt(document.getElementById("jobId").value);
+            var day = parseInt(document.getElementById("day").value);
+            console.log(jobId);
+            console.log(day);
+
+            return meta.salaryStatus.call(jobId, day, {from: account});
+
+          }).then(function(value) {
+            var balance_element = document.getElementById("estatus");
+            balance_element.innerHTML = value.valueOf();
+          }).catch(function(e) {
+            console.log(e);
+            self.setStatus("Error getting balance; see log.");
+          });
+        },
+
+
+            attendanceStatus: function() {
+              var self = this;
+
+              var meta;
+              JobContract.deployed().then(function(instance) {
+                meta = instance;
+                console.log(account);
+                var jobId = parseInt(document.getElementById("jobId").value);
+                var day = parseInt(document.getElementById("day").value);
+                console.log(jobId);
+                console.log(day);
+                return meta.feedbackStatus.call(jobId,day, {from: account});
+              }).then(function(value) {
+                var balance_element = document.getElementById("estatus");
+                balance_element.innerHTML = value.valueOf();
+              }).catch(function(e) {
+                console.log(e);
+                self.setStatus("Error getting balance; see log.");
+              });
+            },
+			
+			getEmpCount: function() {
+    var self = this;
+    var emp;
+    EmployeeContract.deployed().then(function(instance) {
+      emp = instance;
+      return emp.returnEmployeeCount.call(account, {from: account});
+    }).then(function(value) {
+      var emp_count = document.getElementById("empCount");
+      emp_count.innerHTML = value.valueOf();
+    }).catch(function(e) {
+      console.log(e);
+      self.setStatus("Error getting emp count; see log.");
+    });
+  },
+  
+      getEmployees: function() {
+    var employeeCount = document.getElementById("getEmployeeCount").value;
+    console.log(employeeCount);
+    document.getElementById("getEmployeeCount").value='';
+    var emp;
+    EmployeeContract.deployed().then(function(instance) {
+      emp = instance;
+      return emp.getEmployee(employeeCount-1);
+    }).then(function(value) {
+      var emp_details = document.getElementById("getEmpDetails");
+      emp_details.innerHTML = value.valueOf();
+        })
+        .catch(function(error) {
+            console.error(error);
+        });
+    },
+
     getEmployer: function() {
     var emp;
     EmploymentFactoryContract.deployed().then(function(instance) {
@@ -202,119 +343,38 @@ window.App = {
         });
     },
 
-    addContract: function() {
-    var employeeAddress = document.getElementById("employeeAddress").value;
-    console.log(employeeAddress);
-    var employeeSalary = document.getElementById("employeeSalary").value;
-    console.log(employeeSalary);
-    var employeeDuration = document.getElementById("employeeDuration").value;
-    console.log(employeeDuration);
-    var emp;
-    var empFactory;
-    EmploymentFactoryContract.deployed().then(function(instance) {
-      empFactory = instance;
-      return empFactory.getEmploymentContract.call({from: account});
-    }).then(function(value) {
-      console.log(value);
-      emp = EmploymentContract.at(value);
-      return emp.addContract(employeeAddress,employeeSalary,employeeDuration,{from: account});
-    }).then(function() {
-        })
-        .catch(function(error) {
-            console.error(error);
-        });
-    },
 
-    getContract: function() {
-    var employeeAddress = document.getElementById("empAddress").value;
-    console.log(employeeAddress);
-    document.getElementById("empAddress").value='';
-    var emp;
-    var empFactory;
-    EmploymentFactoryContract.deployed().then(function(instance) {
-      empFactory = instance;
-      return empFactory.getEmploymentContract.call({from: account});
-    }).then(function(value) {
-      console.log(value);
-      emp = EmploymentContract.at(value);
-      return emp.getContract(employeeAddress);
-    }).then(function(salary) {
-      console.log(salary);
-      var empsalary_element = document.getElementById("getSalary");
-      empsalary_element.innerHTML = salary.valueOf();
-        })
-        .catch(function(error) {
-            console.error(error);
-        });
-    },
 
-    addContract: function() {
-    var employeeAddress = document.getElementById("employeeAddress").value;
-    console.log(employeeAddress);
-    var employeeSalary = document.getElementById("employeeSalary").value;
-    console.log(employeeSalary);
-    var employeeDuration = document.getElementById("employeeDuration").value;
-    console.log(employeeDuration);
-    var emp;
-    var empFactory;
-    EmploymentFactoryContract.deployed().then(function(instance) {
-      empFactory = instance;
-      return empFactory.getEmploymentContract.call({from: account});
-    }).then(function(value) {
-      console.log(value);
-      emp = EmploymentContract.at(value);
-      return emp.addContract(employeeAddress,employeeSalary,employeeDuration,{from: account});
-    }).then(function() {
-        })
-        .catch(function(error) {
-            console.error(error);
-        });
-    },
 
-    AddRating: function() {
-    var employeeAddress = document.getElementById("empRatingAdd").value;
-    console.log(employeeAddress);
-    var employeeRating = document.getElementById("empRating").value;
-    console.log(employeeRating);
-    document.getElementById("empRatingAdd").value='';
-    document.getElementById("empRating").value='';
-    var emp;
-    var empFactory;
-    EmploymentFactoryContract.deployed().then(function(instance) {
-      empFactory = instance;
-      return empFactory.getEmploymentContract.call({from: account});
-    }).then(function(value) {
-      console.log(value);
-      emp = EmploymentContract.at(value);
-      return emp.addRating(employeeAddress,employeeRating,{from: account});
-    }).then(function(value) {
-      console.log(value);
-        })
-        .catch(function(error) {
-            console.error(error);
-        });
-    },
+    addJob: function() {
+      var self = this;
 
-    removeContract: function() {
-    var employeeAddress = document.getElementById("removeAddress").value;
-    console.log(employeeAddress);
-    var emp;
-    var empFactory;
-    EmploymentFactoryContract.deployed().then(function(instance) {
-      empFactory = instance;
-      return empFactory.getEmploymentContract.call({from: account});
-    }).then(function(value) {
-      console.log(value);
-      emp = EmploymentContract.at(value);
-      return emp.removeContract(employeeAddress,{from: account, gas: 4712388, gasPrice: 100000000000});
-    }).then(function() {
-        })
-        .catch(function(error) {
-            console.error(error);
-        });
-    },
+      var employeeAddr = document.getElementById("employeeAddr").value;
+      var employerAddr = document.getElementById("employerAddr").value;
+      var totalJobSalary = parseInt(document.getElementById("jobSalary").value);
+      var jobDailySalary = parseInt(document.getElementById("jobDailySalary").value);
+      var jobDays = parseInt(document.getElementById("jobDays").value);
 
-    getTransactionsByAccount: function () {
+      console.log(employeeAddr);
+      console.log(employerAddr);
+      this.setStatus("Adding job... (please wait)");
+
+      var meta;
+      JobContract.deployed().then(function(instance) {
+        meta = instance;
+        var result = meta.jobReceived(employerAddr, employeeAddr,totalJobSalary,
+          jobDailySalary, jobDays, {from: account});
+        console.log("result for adding job " + "is" + result);
+        return result;
+      }).then(function() {
+        self.setStatus("Added job!");
+      }).catch(function(e) {
+        console.log(e);
+        self.setStatus("Error adding job; see log.");
+      });
+    },
+	
+	getTransactionsByAccount: function () {
         var myaccount = document.getElementById("empHistoryAdd").value;
         console.log(myaccount);
         document.getElementById("empHistoryAdd").value='';
@@ -348,7 +408,7 @@ window.App = {
                       var inputDataJson = JSON.stringify(inputData);
                       console.log(inputDataJson);
                       if(inputData != null) {
-                        if(inputData.name=="sendCoin" && inputData.params[0].value==myaccount) {
+                        if((inputData.name=="sendCoin" || inputData.name=="genericSendCoin" || inputData.name=="addRating") && (inputData.params[0].value==myaccount ||inputData.params[1].value==myaccount || inputData.params[1].value==myaccount)) {
                         console.log(block.timestamp);
                         console.log(inputData.params[1].value);
                         empHistoryDict[block.timestamp] = inputData.params[1].value;
@@ -364,12 +424,13 @@ window.App = {
         }
       });
     }
+
 };
 
 window.addEventListener('load', function() {
   // Checking if Web3 has been injected by the browser (Mist/MetaMask)
   if (typeof web3 !== 'undefined') {
-    console.warn("Using web3 detected from external source. If you find that your accounts don't appear or you have 0 MetaCoin, ensure you've configured that source properly. If using MetaMask, see the following link. Feel free to delete this warning. :) http://truffleframework.com/tutorials/truffle-and-metamask")
+    console.warn("Using web3 detected from external source. If you find that your accounts don't appear or you have 0 JobContract, ensure you've configured that source properly. If using MetaMask, see the following link. Feel free to delete this warning. :) http://truffleframework.com/tutorials/truffle-and-metamask")
     // Use Mist/MetaMask's provider
     window.web3 = new Web3(web3.currentProvider);
   } else {
