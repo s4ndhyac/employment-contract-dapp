@@ -101,8 +101,8 @@ window.App = {
       meta = JobContract.at(value);
       return meta.getBalance.call(account, {from: account});
     }).then(function(value) {
-      var balance_element = document.getElementById("balance");
-      balance_element.innerHTML = value.valueOf();
+      // var balance_element = document.getElementById("balance");
+      // balance_element.innerHTML = value.valueOf();
     }).catch(function(e) {
       console.log(e);
       self.setStatus("Error getting balance; see log.");
