@@ -76,15 +76,25 @@ window.App = {
     }).then(function(value) {
       emp_count = value.valueOf();
       console.log(emp_count);
-      var select = document.getElementById('employees_list');
+      var select0 = document.getElementById('employees_list');
+      var select1 = document.getElementById('employerAddr');
+      var select2 = document.getElementById('empHistoryAdd');
       for (var i = 1; i <= emp_count; i++) {
         emp.getEmployee.call(i-1,{from: account}).then(function(value) {
           console.log(value);
-          if (value[3] == 1) {
+          for (var i = 0; i < 3; i++) {
             var opt = document.createElement('option');
             opt.value = value[0];
             opt.innerHTML =  web3.toAscii(value[1]);
-            select.appendChild(opt);
+            if (i == 0) {
+              if (value[3] == 1) {
+                select0.appendChild(opt);
+              }
+            } else if (i == 1) {
+              select1.appendChild(opt);
+            } else if (i == 2) {
+              select2.appendChild(opt);
+            }
           }
         });;
 
