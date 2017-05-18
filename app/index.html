@@ -13,7 +13,7 @@
   <br><label for="addEmployeeName">User Name:</label><input type="text" id="addEmployeeName" placeholder="e.g., sandhya"></input>
   <br><label for="addEmployeeSkill">User Skill:</label><input type="text" id="addEmployeeSkill" placeholder="e.g., coding"></input>
   <br><label for="addEmployeeRole">Role:</label><input type="text" id="addEmployeeRole" placeholder="e.g., 0/1"></input>
-  <br><br><button id="addEmployee" onclick="App.addEmployee()">Add Contract</button>
+  <br><br><button id="addEmployee" onclick="App.addEmployee()">Add User</button>
   <br>
   <br>
   <h3>User Count: <span class="black"><span id="empCount"></span></span></h3>
@@ -21,7 +21,7 @@
   <br>
   <br>
   <h1>Get Employee: </h1>
-  <br><label for="getEmployeeCount">Enter Employee ID:</label><input type="text" id="getEmployeeCount" placeholder="e.g., 0x93e66d9baea28c17d9fc393b53e3fbdd76899dae"></input>
+  <br><label for="getEmployeeCount">Enter Employee ID:</label><input type="text" id="getEmployeeCount" placeholder="e.g., 1,2,3"></input>
   <br><br><button id="getEmployees" onclick="App.getEmployees()">Get Employee</button>
   <p>Employee details is: <span class="black"><span id="getEmpDetails"></span></span></p>
   <br>
@@ -38,7 +38,8 @@
 <br><label for="address">address:</label><input type="text" id="employerAddr" placeholder="address"></input>
 
   <br><br><button id="getBalance" onclick="App.getBalance()">Get balance</button>
-
+  <br><br>
+<span id="gen"></span>
 <br><br><br>
 <h1>Enter Job ID: </h1>
   <br><br><label for="jobId">job id:</label><input type="text" id="jobId" placeholder="e.g.,100"></input>
@@ -78,7 +79,7 @@
 
   <span id="estatus"></span>
 
-  <span id="gen"></span>
+  
 
 </body>
 </html>
