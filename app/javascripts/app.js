@@ -286,62 +286,6 @@ window.App = {
       });
     },
 
-
-        salaryStatus: function() {
-          var self = this;
-
-          var meta;
-          var empFactory;
-    EmploymentFactoryContract.deployed().then(function(instance) {
-      empFactory = instance;
-      return empFactory.getEmploymentContract.call({from: account});
-    }).then(function(value) {
-      console.log(value);
-      meta = JobContract.at(value);
-            console.log(account);
-            var jobId = parseInt(document.getElementById("jobId").value);
-            var day = parseInt(document.getElementById("day").value);
-            console.log(jobId);
-            console.log(day);
-
-            return meta.salaryStatus.call(jobId, day, {from: account});
-
-          }).then(function(value) {
-            var balance_element = document.getElementById("estatus");
-            balance_element.innerHTML = value.valueOf();
-          }).catch(function(e) {
-            console.log(e);
-            self.setStatus("Error getting balance; see log.");
-          });
-        },
-
-
-            attendanceStatus: function() {
-              var self = this;
-
-              var meta;
-              var empFactory;
-    EmploymentFactoryContract.deployed().then(function(instance) {
-      empFactory = instance;
-      return empFactory.getEmploymentContract.call({from: account});
-    }).then(function(value) {
-      console.log(value);
-      meta = JobContract.at(value);
-                console.log(account);
-                var jobId = parseInt(document.getElementById("jobId").value);
-                var day = parseInt(document.getElementById("day").value);
-                console.log(jobId);
-                console.log(day);
-                return meta.feedbackStatus.call(jobId,day, {from: account});
-              }).then(function(value) {
-                var balance_element = document.getElementById("estatus");
-                balance_element.innerHTML = value.valueOf();
-              }).catch(function(e) {
-                console.log(e);
-                self.setStatus("Error getting balance; see log.");
-              });
-            },
-			
 			getEmpCount: function() {
     var self = this;
     var emp;
