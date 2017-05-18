@@ -56,8 +56,8 @@ window.App = {
   },
 
   setStatus: function(message) {
-    var status = document.getElementById("status");
-    status.innerHTML = message;
+    // var status = document.getElementById("status");
+    // status.innerHTML = message;
   },
 
   setTestBox: function(message) {
@@ -67,6 +67,29 @@ window.App = {
 
   refreshBalance: function() {
     var self = this;
+    var emp;
+    var employees = [];
+    var emp_count;
+    EmployeeContract.deployed().then(function(instance) {
+      emp = instance;
+      return emp.returnEmployeeCount.call(account, {from: account});
+    }).then(function(value) {
+      emp_count = value.valueOf();
+      console.log(emp_count);
+      var select = document.getElementById('employees_list');
+      for (var i = 1; i <= emp_count; i++) {
+        emp.getEmployee.call(i-1,{from: account}).then(function(value) {
+          console.log(value);
+          if (value[3] == 1) {
+            var opt = document.createElement('option');
+            opt.value = value[0];
+            opt.innerHTML =  web3.toAscii(value[1]);
+            select.appendChild(opt);
+          }
+        });;
+
+      }
+    });
 
     var meta;
     var empFactory;
@@ -113,7 +136,7 @@ window.App = {
 
     var amount = parseInt(document.getElementById("amount").value);
     var receiver = document.getElementById("receiver").value;
-      
+
     this.setStatus("Initiating transaction... (please wait)");
 
     var meta;
@@ -186,7 +209,7 @@ window.App = {
       self.setStatus("Error adding coin; see log.");
     });
   },
-  
+
   addEmployee: function() {
     var employeeSkill = document.getElementById("addEmployeeSkill").value;
     console.log(employeeSkill);
@@ -217,10 +240,10 @@ window.App = {
       }
     },
 
-    getEmployees: function() {
-    var employeeCount = document.getElementById("getEmployeeCount").value;
-    console.log(employeeCount);
-    document.getElementById("getEmployeeCount").value='';
+  getEmployees: function(employeeCount) {
+    // var employeeCount = document.getElementById("getEmployeeCount").value;
+    // console.log(employeeCount);
+    // document.getElementById("getEmployeeCount").value='';
     var emp;
     EmployeeContract.deployed().then(function(instance) {
       emp = instance;
@@ -341,36 +364,38 @@ window.App = {
                 self.setStatus("Error getting balance; see log.");
               });
             },
-			
+
 			getEmpCount: function() {
-    var self = this;
-    var emp;
-    EmployeeContract.deployed().then(function(instance) {
-      emp = instance;
-      return emp.returnEmployeeCount.call(account, {from: account});
-    }).then(function(value) {
-      var emp_count = document.getElementById("empCount");
-      emp_count.innerHTML = value.valueOf();
-    }).catch(function(e) {
-      console.log(e);
-      self.setStatus("Error getting emp count; see log.");
-    });
-  },
-  
-      getEmployees: function() {
-    var employeeCount = document.getElementById("getEmployeeCount").value;
-    console.log(employeeCount);
-    document.getElementById("getEmployeeCount").value='';
-    var emp;
-    EmployeeContract.deployed().then(function(instance) {
-      emp = instance;
-      return emp.getEmployee(employeeCount-1);
-    }).then(function(value) {
-      var emp_details = document.getElementById("getEmpDetails");
-      emp_details.innerHTML = value.valueOf();
+        var self = this;
+        var emp;
+        EmployeeContract.deployed().then(function(instance) {
+          emp = instance;
+          return emp.returnEmployeeCount.call(account, {from: account});
+        }).then(function(value) {
+          var emp_count = document.getElementById("empCount");
+          emp_count.innerHTML = value.valueOf();
+          return value.valueOf();
+        }).catch(function(e) {
+          console.log(e);
+          self.setStatus("Error getting emp count; see log.");
+        });
+      },
+
+      getEmployees: function(employeeCount) {
+        // var employeeCount = document.getElementById("getEmployeeCount").value;
+        // console.log(employeeCount);
+        // document.getElementById("getEmployeeCount").value='';
+        var emp;
+        EmployeeContract.deployed().then(function(instance) {
+          emp = instance;
+          return emp.getEmployee(employeeCount-1);
+        }).then(function(value) {
+        var emp_details = document.getElementById("getEmpDetails");
+        emp_details.innerHTML = value.valueOf();
+        return value.valueOf();
         })
         .catch(function(error) {
-            console.error(error);
+              console.error(error);
         });
     },
 
@@ -395,7 +420,8 @@ window.App = {
     addJob: function() {
       var self = this;
 
-      var employeeAddr = document.getElementById("employeeAddr").value;
+      var employeeAddr = document.getElementById("employees_list").value;
+      // var employeeAddr = employeeAddr_sel.options[employeeAddr_sel.selectedIndex].value;
       var totalJobSalary = parseInt(document.getElementById("jobSalary").value);
       var jobDailySalary = parseInt(document.getElementById("jobDailySalary").value);
       var jobDays = parseInt(document.getElementById("jobDays").value);
@@ -422,7 +448,7 @@ window.App = {
         self.setStatus("Error adding job; see log.");
       });
     },
-	
+
   getTxnHistory: function () {
     var empAddress = document.getElementById('empHistoryAdd').value;
    var status = document.getElementById ('empHistory');

@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Employment Contract</title>
+  <title>Roji</title>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
   <script src="./app.js"></script>
 </head>
 <body>
-  <h1>Employment Contract</h1>
-  <h3>You have <span class="black"><span id="balance"></span> ETHER</span></h3>
 
-  <br>
+  <!-- <h3>You have <span class="black"><span id="balance"></span> ETHER</span></h3> -->
+
+  <!-- <br>
   <h1>Send Ether</h1>
   <br><label for="amount">Amount:</label><input type="text" id="amount" placeholder="e.g., 95"></input>
   <br><label for="receiver">To Address:</label><input type="text" id="receiver" placeholder="e.g., 0x93e66d9baea28c17d9fc393b53e3fbdd76899dae"></input>
@@ -17,8 +18,34 @@
   <br><br>
   <span id="status"></span>
   <br>
-  <span class="hint"><strong>Hint:</strong> open the browser developer console to view any errors and warnings.</span>
+  <span class="hint"><strong>Hint:</strong> open the browser developer console to view any errors and warnings.</span> -->
 
+  <div class="panel panel-default">
+    <div class="panel-heading">Enrol</div>
+    <div class="panel-body">
+      <div class="form-group">
+        <label for="addEmployeeName">Name</label>
+        <input type="text" class="form-control" id="addEmployeeName" aria-describedby="emailHelp" placeholder="Enter your name">
+      </div>
+      <div class="form-group">
+        <label for="addEmployeeSkill">Skills</label>
+        <input type="text" class="form-control" id="addEmployeeSkill" aria-describedby="emailHelp" placeholder="Enter your skills">
+      </div>
+
+      <div class="form-group">
+        <label for="exampleSelect1">I'm ?</label>
+        <select class="form-control" id="addEmployeeRole">
+          <option selected disabled>Choose here</option>
+          <option value="0">looking to Hire</option>
+          <option value="1">Seeking a job</option>
+        </select>
+      </div>
+      <button type="submit" style="float: right" class="btn btn-primary" id="addEmployee" onclick="App.addEmployee()">Submit</button>
+
+    </div>
+  </div>
+
+<!-- <div class="panel panel-default">
   <h1>Add User</h1>
   <br><label for="addEmployeeName">User Name:</label><input type="text" id="addEmployeeName" placeholder="e.g., sandhya"></input>
   <br><label for="addEmployeeSkill">User Skill:</label><input type="text" id="addEmployeeSkill" placeholder="e.g., coding"></input>
@@ -26,32 +53,32 @@
   <br><br><button id="addEmployee" onclick="App.addEmployee()">Add Contract</button>
   <br>
   <br>
+</div> -->
+<div class="panel panel-default">
+  <div class="panel-heading">Hire</div>
+  <div class="panel-body">
+    <div class="form-group">
+      <label for="addEmployeeName">Employee</label>
+      <select id="employees_list" class="form-control" id="employeeAddr">
+        <option selected disabled>Choose here</option>
 
-  <br><label for="employeeAddr">EmployeeAddr:</label><input type="text" id="employeeAddr" placeholder="e.g.,0x3477904"></input>
-  <br><label for="jobSalary">jobSalary:</label><input type="text" id="jobSalary" placeholder="e.g.,100"></input>
-
-  <br><label for="jobDailySalary">jobDailySalary:</label><input type="text" id="jobDailySalary" placeholder="e.g.,100"></input>
-
-  <br><label for="jobDays">jobDays:</label><input type="text" id="jobDays" placeholder="e.g.,100"></input>
-
-
-  <br><br><button id="addJob" onclick="App.addJob()">Add job</button>
-
-  <h1>Get Employer from factory</h1>
-  <br><br><button id="getEmployer" onclick="App.getEmployer()">Get Employer</button>
-  <p>Employer details is: <span class="black"><span id="getEmployerDetails"></span></span></p>
-  <br>
-  <br>
-  <h3>Employee Count: <span class="black"><span id="empCount"></span></span></h3>
-  <br><br><button id="getEmpCount" onclick="App.getEmpCount()">Get Employees</button>
-  <br>
-  <br>
-  <h1>Get Employees</h1>
-  <br><label for="getEmployeeCount">Employee Count:</label><input type="text" id="getEmployeeCount" placeholder="e.g., 0x93e66d9baea28c17d9fc393b53e3fbdd76899dae"></input>
-  <br><br><button id="getEmployees" onclick="App.getEmployees()">Get Employees</button>
-  <p>Employee details is: <span class="black"><span id="getEmpDetails"></span></span></p>
-  <br>
-  <br>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="addEmployeeName">Salary</label>
+      <input type="text" class="form-control" id="jobSalary">
+    </div>
+    <div class="form-group">
+      <label for="addEmployeeName">Daily wage</label>
+      <input type="text" class="form-control" id="jobDailySalary">
+    </div>
+    <div class="form-group">
+      <label for="addEmployeeName">Period</label>
+      <input type="text" class="form-control" id="jobDays">
+    </div>
+    <button type="submit" style="float: right" class="btn btn-primary" id="addJob" onclick="App.addJob()">Submit</button>
+  </div>
+</div>
 
 <br><label for="address">address:</label><input type="text" id="employerAddr" placeholder="address"></input>
 
@@ -80,7 +107,7 @@
   <br><br><button id="attendanceStatus" onclick="App.attendanceStatus()">attendanceStatus employee</button>
 
   <br><label for="day">day:</label><input type="text" id="day" placeholder="e.g.,100"></input>
-  
+
   <h1>Get Transaction History</h1>
   <br><label for="empHistoryAdd">Employee History:</label><input type="text" id="empHistoryAdd" placeholder="e.g., 0x93e66d9baea28c17d9fc393b53e3fbdd76899dae"></input>
   <br><br><button id="getHistory" onclick="App.getTxnHistory()">Get History</button>
