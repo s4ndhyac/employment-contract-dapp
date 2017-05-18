@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Roji</title>
+  <title>Roji: A helping hand for the helping hand</title>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
   <script src="./app.js"></script>
@@ -79,31 +79,32 @@
     <button type="submit" style="float: right" class="btn btn-primary" id="addJob" onclick="App.addJob()">Submit</button>
   </div>
 </div>
-
-<br><label for="address">address:</label><input type="text" id="employerAddr" placeholder="address"></input>
+<br><br>
+<h3>Check Balance</h3>
+<label for="address">address:</label><input type="text" id="employerAddr" placeholder="address"></input>
 
   <br><br><button id="getBalance" onclick="App.getBalance()">Get balance from employer field</button>
+  <span id="gen"></span>
+<br><br>
+  <br><label for="jobId">Enter Job ID:</label><input type="text" id="jobId" placeholder="e.g.,100"></input>
 
-  <br><label for="jobId">job id:</label><input type="text" id="jobId" placeholder="e.g.,100"></input>
+  <br><label for="rating">Enter Rating:</label><input type="text" id="rating" placeholder="0-10"></input>
+  <br><br><button id="markJob" onclick="App.markJobStatusDaily()">Give Rating</button>
 
-  <br><br><button id="markJob" onclick="App.markJobStatusDaily()">mark employee status</button>
-
-  <br><label for="rating">rating:</label><input type="text" id="rating" placeholder="0-10"></input>
-
-  <br><br><button id="pullSalary" onclick="App.pullSalary()">pull employee salary</button>
+  <br><br><button id="pullSalary" onclick="App.pullSalary()">Pull employee salary</button>
 
 
-  <br><br><button id="markJob" onclick="App.lastDayForMarkedAttendance()">get last day for employee attendance</button>
+  <br><br><button id="markJob" onclick="App.lastDayForMarkedAttendance()">Last day for employee attendance</button>
 
   <span id="lastDayForMarkedAttendance"></span>
 
 
-  <br><br><button id="markJob" onclick="App.lastDayForReleasedSalary()">get last day for employee salary</button>
+  <br><br><button id="markJob" onclick="App.lastDayForReleasedSalary()">Last day for employee salary</button>
 
   <span id="lastDayForReleasedSalary"></span>
-
-  <h1>Get Transaction History</h1>
-  <br><label for="empHistoryAdd">Employee History:</label><input type="text" id="empHistoryAdd" placeholder="e.g., 0x93e66d9baea28c17d9fc393b53e3fbdd76899dae"></input>
+<br><br>
+  <h3>Get Transaction History</h3>
+  <br><label for="empHistoryAdd">Employee Address:</label><input type="text" id="empHistoryAdd" placeholder="e.g., 0x93e66d9baea28c17d9fc393b53e3fbdd76899dae"></input>
   <br><br><button id="getHistory" onclick="App.getTxnHistory()">Get History</button>
   <p>Employee Transaction History is: <span class="black"><span id="empHistory"></span></span></p>
   <br>
@@ -115,7 +116,7 @@
 
 
 
-  <span id="gen"></span>
+  
 
 
 </body>
